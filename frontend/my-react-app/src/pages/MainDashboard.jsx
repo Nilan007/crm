@@ -198,7 +198,7 @@ export default function MainDashboard() {
                     <div className="section-card">
                         <h3 className="section-title">Pipeline Composition ({timeRange})</h3>
                         <div style={{ width: '100%', height: 300 }}>
-                            <ResponsiveContainer width="100%" height={300}>
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <BarChart data={barData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
@@ -212,8 +212,8 @@ export default function MainDashboard() {
 
                     <div className="section-card">
                         <h3 className="section-title">Outcome Distribution</h3>
-                        <div style={{ width: '100%', height: 250, display: 'flex', justifyContent: 'center' }}>
-                            <ResponsiveContainer width="100%" height={250}>
+                        <div style={{ width: '100%', height: 250 }}>
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <PieChart>
                                     <Pie
                                         data={pieData}
