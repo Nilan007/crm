@@ -66,11 +66,23 @@ export default function CompanyProfile() {
         }
         setSaving(true);
         const token = localStorage.getItem('token');
-        // Sanitize payload to remove empty strings for enum fields
-        const payload = { ...selectedProfile };
-        if (!payload.businessType) delete payload.businessType;
-        if (!payload.businessSize) delete payload.businessSize;
-        if (!payload.primeSubPreference) delete payload.primeSubPreference;
+
+        // Helper to clean payload
+        const cleanPayload = (obj) => {
+            const cleaned = {};
+            Object.keys(obj).forEach(key => {
+                const val = obj[key];
+                // Remove null, undefined, empty strings, and NaN
+                // Keep false (boolean) and 0 (number)
+                if (val !== null && val !== undefined && val !== '' && !(typeof val === 'number' && isNaN(val))) {
+                    // Recursively clean objects if needed, but for now flat fields are main concern
+                    cleaned[key] = val;
+                }
+            });
+            return cleaned;
+        };
+
+        const payload = cleanPayload(selectedProfile);
 
         try {
             let res;
