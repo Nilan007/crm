@@ -133,6 +133,19 @@ export default function MainDashboard() {
         { name: 'Open', value: activeDeals - wonCount - lossCount }
     ].filter(d => d.value > 0);
 
+    // Proposal Sector Data
+    const sectorCounts = { State: 0, Federal: 0, Others: 0 };
+    dashboardData.proposals.forEach(p => {
+        if (p.sector === 'Federal') sectorCounts.Federal++;
+        else if (p.sector === 'State' || !p.sector) sectorCounts.State++;
+        else sectorCounts.Others++;
+    });
+    const proposalSectorData = [
+        { name: 'State', value: sectorCounts.State },
+        { name: 'Federal', value: sectorCounts.Federal },
+        { name: 'Others', value: sectorCounts.Others }
+    ].filter(d => d.value > 0);
+
     if (loading) return <div className="main-dashboard" style={{ padding: '40px', textAlign: 'center' }}>Loading Executive Intelligence...</div>;
 
     return (
@@ -210,28 +223,55 @@ export default function MainDashboard() {
                         </div>
                     </div>
 
-                    <div className="section-card">
-                        <h3 className="section-title">Outcome Distribution</h3>
-                        <div style={{ width: '100%', height: 250 }}>
-                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                                <PieChart>
-                                    <Pie
-                                        data={pieData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {pieData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip />
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
-                            </ResponsiveContainer>
+                    <div style={{ display: 'flex', gap: '24px' }}>
+                        <div className="section-card" style={{ flex: 1 }}>
+                            <h3 className="section-title">Leads Outcome</h3>
+                            <div style={{ width: '100%', height: 250 }}>
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                                    <PieChart>
+                                        <Pie
+                                            data={pieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {pieData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        <div className="section-card" style={{ flex: 1 }}>
+                            <h3 className="section-title">Proposal Sectors</h3>
+                            <div style={{ width: '100%', height: 250 }}>
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                                    <PieChart>
+                                        <Pie
+                                            data={proposalSectorData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {proposalSectorData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
                         </div>
                     </div>
                 </div>

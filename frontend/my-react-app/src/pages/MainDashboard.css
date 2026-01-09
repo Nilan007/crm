@@ -192,7 +192,26 @@
     color: #6B778C;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1440px) {
+    .kpi-row {
+        gap: 12px;
+    }
+
+    .kpi-card {
+        padding: 16px;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    .kpi-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Delay stacking until tablet size */
+@media (max-width: 1024px) {
     .kpi-row {
         grid-template-columns: 1fr 1fr;
     }
