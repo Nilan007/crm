@@ -45,6 +45,9 @@ router.get('/:id', auth, async (req, res) => {
 
 /* ================= CREATE NEW PROFILE ================= */
 router.post('/', auth, async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: "User not authenticated" });
+    }
     try {
         const profile = await CompanyProfile.create({
             ...req.body,
@@ -53,13 +56,17 @@ router.post('/', auth, async (req, res) => {
         res.status(201).json(profile);
     } catch (err) {
         console.error('Error creating profile:', err);
-        res.status(500).json({ message: 'Failed to create profile', error: err.message });
+        res.status(500).json({ message: 'Failed to create profile', error: err.toString() });
     }
 });
 
 /* ================= UPDATE PROFILE ================= */
 router.put('/:id', auth, async (req, res) => {
     try {
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
         // Remove immutable fields
         const updates = { ...req.body };
         delete updates._id;
@@ -71,7 +78,7 @@ router.put('/:id', auth, async (req, res) => {
         const profile = await CompanyProfile.findByIdAndUpdate(
             req.params.id,
             { ...updates, updatedBy: req.user.id },
-            { new: true }
+            { new: true, runValidators: true } // Ensure validators run on update
         );
 
         if (!profile) return res.status(404).json({ message: 'Profile not found' });
@@ -80,7 +87,7 @@ router.put('/:id', auth, async (req, res) => {
         res.json(profile);
     } catch (err) {
         console.error('Error updating profile:', err);
-        res.status(500).json({ message: 'Failed to update profile', error: err.message });
+        res.status(500).json({ message: 'Failed to update profile', error: err.toString() });
     }
 });
 
