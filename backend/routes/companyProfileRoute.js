@@ -45,52 +45,53 @@ router.get('/:id', auth, async (req, res) => {
 
 /* ================= CREATE NEW PROFILE ================= */
 router.post('/', auth, async (req, res) => {
-    console.log("POST CompanyProfile Body:", JSON.stringify(req.body)); // DEBUG LOG
+    console.log("POST CompanyProfile Body:", JSON.stringify(req.body));
     if (!req.user || !req.user.id) {
         return res.status(401).json({ message: "User not authenticated" });
     }
+    // DEBUG MODE: Return Success immediately to test connectivity
+    return res.status(201).json({ _id: "debug_id_123", legalName: req.body.legalName || "Debug Company", msg: "Debug Mode Success" });
+
+    /* 
     try {
         const profile = await CompanyProfile.create({
             ...req.body,
-            // updatedBy: req.user.id // TEMPORARY DEBUG: Comment out
+            updatedBy: req.user.id
         });
         res.status(201).json(profile);
     } catch (err) {
         console.error('Error creating profile:', err);
         res.status(500).json({ message: 'Failed to create profile', error: err.toString() });
     }
+    */
 });
 
 /* ================= UPDATE PROFILE ================= */
 router.put('/:id', auth, async (req, res) => {
-    console.log("PUT CompanyProfile Body:", JSON.stringify(req.body)); // DEBUG LOG
-    try {
-        if (!req.user || !req.user.id) {
-            return res.status(401).json({ message: "User not authenticated" });
-        }
-
-        // Remove immutable fields
-        const updates = { ...req.body };
-        delete updates._id;
-        delete updates.__v;
-        delete updates.createdAt;
-        delete updates.updatedAt;
-        delete updates.createdBy;
-
-        const profile = await CompanyProfile.findByIdAndUpdate(
-            req.params.id,
-            { ...updates }, // TEMPORARY DEBUG: Removed updatedBy
-            { new: true, runValidators: true }
-        );
-
-        if (!profile) return res.status(404).json({ message: 'Profile not found' });
-
-        req.app.get('io').emit('company-profile:updated');
-        res.json(profile);
-    } catch (err) {
-        console.error('Error updating profile:', err);
-        res.status(500).json({ message: 'Failed to update profile', error: err.toString() });
+    console.log("PUT CompanyProfile Body:", JSON.stringify(req.body));
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: "User not authenticated" });
     }
+    // DEBUG MODE: Return Success immediately
+    return res.json({ _id: req.params.id, ...req.body, msg: "Debug Mode Update Success" });
+
+    /*
+    try {
+        // ... Original Code ...
+        const profile = await CompanyProfile.findByIdAndUpdate(...)
+        // ...
+    } catch (err) { ... }
+    */
+});
+
+if (!profile) return res.status(404).json({ message: 'Profile not found' });
+
+req.app.get('io').emit('company-profile:updated');
+res.json(profile);
+    } catch (err) {
+    console.error('Error updating profile:', err);
+    res.status(500).json({ message: 'Failed to update profile', error: err.toString() });
+}
 });
 
 /* ================= DELETE PROFILE ================= */
