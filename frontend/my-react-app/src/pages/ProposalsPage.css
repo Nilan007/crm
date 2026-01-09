@@ -201,3 +201,72 @@
 .edit-btn:hover {
     background: #f4f5f7;
 }
+
+/* ================= RESPONSIVE LAYOUT CLASSES ================= */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.list-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* 13-14 Inch Laptop Optimizations (1280px - 1440px) */
+@media (max-width: 1440px) {
+    .proposals-container {
+        padding: 15px;
+        max-width: 98%;
+        /* Use full width */
+    }
+
+    /* Keep 4 columns but reduced gap */
+    .kpi-grid {
+        gap: 10px;
+    }
+
+    .kpi-card {
+        padding: 12px;
+        /* Smaller kpi padding */
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    /* Shrink the side filter to allow more room for table */
+    .list-layout {
+        grid-template-columns: 1fr 220px;
+        gap: 16px;
+    }
+
+    /* Compress Table Padding */
+    .proposals-table th,
+    .proposals-table td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        /* Smaller font for dense table */
+    }
+
+    .header-actions .view-btn,
+    .create-proposal-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Tablet / Small Breakpoint */
+@media (max-width: 1024px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .list-layout {
+        grid-template-columns: 1fr;
+        /* Stack filters below table */
+    }
+}

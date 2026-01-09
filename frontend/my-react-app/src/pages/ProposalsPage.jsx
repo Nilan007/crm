@@ -233,6 +233,8 @@ export default function ProposalsPage() {
 
         const subVal = subset.reduce((acc, p) => acc + (p.submittedValue || 0), 0);
         const awardVal = subset.filter(p => ['Awarded', 'Won'].includes(p.status)).reduce((acc, p) => acc + (p.submittedValue || 0), 0);
+        const lostVal = subset.filter(p => ['Lost', 'Cancelled'].includes(p.status)).reduce((acc, p) => acc + (p.submittedValue || 0), 0);
+        const pendingVal = subVal - awardVal - lostVal;
 
         return {
             total, winRate, subVal, awardVal,
@@ -242,6 +244,16 @@ export default function ProposalsPage() {
                     data: [wins, losses, pending],
                     backgroundColor: ['#36B37E', '#FF5630', '#FFAB00'],
                     borderWidth: 0
+                }]
+            },
+            barData: {
+                labels: ['Won', 'Lost', 'Pending'],
+                datasets: [{
+                    label: 'Value ($)',
+                    data: [awardVal, lostVal, pendingVal],
+                    backgroundColor: ['#36B37E', '#FF5630', '#FFAB00'],
+                    borderRadius: 4,
+                    barThickness: 20
                 }]
             }
         };
@@ -286,7 +298,7 @@ export default function ProposalsPage() {
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
                                             {/* KPI Row (Small & Clean) */}
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                                            <div className="kpi-grid">
                                                 <div style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #ebecf0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
                                                     <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#6B778C', fontWeight: '700' }}>Submissions</div>
                                                     <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#172B4D', marginTop: '4px', lineHeight: 1.2 }}>{section.stats.total}</div>
@@ -305,10 +317,11 @@ export default function ProposalsPage() {
                                                 </div>
                                             </div>
 
-                                            {/* Chart Row (Small & Aligned) */}
-                                            <div style={{ display: 'flex' }}>
-                                                <div style={{ width: '380px', background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #ebecf0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '12px', color: '#42526E', fontWeight: '600' }}>Outcome Distribution</h4>
+                                            {/* Chart Row */}
+                                            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                                                {/* Chart 1: Distribution */}
+                                                <div style={{ flex: '1', minWidth: '300px', background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #ebecf0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '12px', color: '#42526E', fontWeight: '600' }}>Outcome (Count)</h4>
                                                     <div style={{ height: '200px', display: 'flex', justifyContent: 'center' }}>
                                                         <Doughnut
                                                             data={section.stats.chartData}
@@ -322,6 +335,24 @@ export default function ProposalsPage() {
                                                                     }
                                                                 },
                                                                 layout: { padding: 5 }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Chart 2: Value */}
+                                                <div style={{ flex: '1', minWidth: '300px', background: 'white', padding: '16px', borderRadius: '8px', border: '1px solid #ebecf0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '12px', color: '#42526E', fontWeight: '600' }}>Value Distribution ($)</h4>
+                                                    <div style={{ height: '200px' }}>
+                                                        <Bar
+                                                            data={section.stats.barData}
+                                                            options={{
+                                                                maintainAspectRatio: false,
+                                                                plugins: { legend: { display: false } },
+                                                                scales: {
+                                                                    x: { grid: { display: false } },
+                                                                    y: { beginAtZero: true, ticks: { callback: (val) => '$' + val.toLocaleString() } }
+                                                                }
                                                             }}
                                                         />
                                                     </div>
@@ -435,7 +466,7 @@ export default function ProposalsPage() {
                                 )}
 
                                 {/* Two-column layout for table and state filter */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '24px', alignItems: 'start' }}>
+                                <div className="list-layout">
                                     <div>
 
                                         <table className="proposals-table">
