@@ -9,28 +9,25 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const crypto = require('crypto');
 
 // Configure GridFS Storage
-const createStorage = () => {
-    return new GridFsStorage({
-        url: process.env.MONGO_URI,
-        file: (req, file) => {
-            return new Promise((resolve, reject) => {
-                crypto.randomBytes(16, (err, buf) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    const filename = buf.toString('hex') + path.extname(file.originalname);
-                    const fileInfo = {
-                        filename: filename,
-                        bucketName: 'uploads' // collection name will be uploads.files
-                    };
-                    resolve(fileInfo);
-                });
+// Configure GridFS Storage
+const storage = new GridFsStorage({
+    db: mongoose.connection,
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {
+            crypto.randomBytes(16, (err, buf) => {
+                if (err) {
+                    return reject(err);
+                }
+                const filename = buf.toString('hex') + path.extname(file.originalname);
+                const fileInfo = {
+                    filename: filename,
+                    bucketName: 'uploads' // collection name will be uploads.files
+                };
+                resolve(fileInfo);
             });
-        }
-    });
-};
-
-const storage = createStorage();
+        });
+    }
+});
 const upload = multer({ storage });
 
 // Initialize GridFSBucket for retrieval

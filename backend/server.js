@@ -19,12 +19,7 @@ startScheduler();
 
 /* ================= MIDDLEWARE ================= */
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://crm-frontend-gnol.onrender.com",
-    process.env.FRONTEND_URL // Allow Production Frontend
-  ].filter(Boolean),
+  origin: true,
   credentials: true
 }));
 
