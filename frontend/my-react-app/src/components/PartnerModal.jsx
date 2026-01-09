@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../axios.jsx";
 import "./PartnerModal.css";
 import { useToast } from '../context/ToastContext';
 import FileUpload from './FileUpload';
@@ -74,18 +74,16 @@ export default function PartnerModal({ isOpen, onClose, onPartnerAdded, partnerT
 
             // 1. Save Partner Data
             if (partnerToEdit) {
-                const res = await axios.put(
-                    `http://localhost:5000/api/partners/${partnerToEdit._id}`,
-                    formData,
-                    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+                const res = await api.put(
+                    `/api/partners/${partnerToEdit._id}`,
+                    formData
                 );
                 partnerId = res.data._id;
                 addToast("Partner updated successfully", "success");
             } else {
-                const res = await axios.post(
-                    "http://localhost:5000/api/partners",
-                    formData,
-                    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+                const res = await api.post(
+                    "/api/partners",
+                    formData
                 );
                 partnerId = res.data._id;
                 addToast("Partner created successfully", "success");
@@ -96,10 +94,10 @@ export default function PartnerModal({ isOpen, onClose, onPartnerAdded, partnerT
                 const uploadData = new FormData();
                 uploadData.append('file', selectedFile);
 
-                await axios.post(
-                    `http://localhost:5000/api/partners/${partnerId}/upload`,
-                    uploadData,
-                    { headers: { Authorization: `Bearer ${token}` } } // Axios sets content-type
+                await api.post(
+                    `/api/partners/${partnerId}/upload`,
+                    uploadData
+                    // Axios/browser sets multipart/form-data boundary automatically
                 );
                 addToast("Capability Statement uploaded", "success");
             }

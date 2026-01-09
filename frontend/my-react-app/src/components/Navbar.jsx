@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, NavLink, Link } from "react-router-dom";
-import axios from 'axios';
+import api from '../axios.jsx';
 import "./Navbar.css";
 
 
@@ -28,9 +28,7 @@ export default function Navbar() {
       if (!user) return;
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("http://localhost:5000/api/notifications", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await api.get("/api/notifications");
 
         // Filter out those deemed "read" for TODAY
         // Key format: `notif-read-${id}-${dateString}`

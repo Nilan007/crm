@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
+import api from "../axios.jsx";
 import KanbanBoard from "../components/KanbanBoard";
 import ListView from "../components/ListView";
 import AddDealModal from "../components/AddDealModal";
@@ -43,9 +43,7 @@ export default function LeadsDashboard() {
         }
 
         try {
-            const res = await axios.get("http://localhost:5000/api/leads", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get("/api/leads");
             setLeads(res.data);
         } catch (err) {
             console.error("Error fetching leads:", err);
@@ -65,7 +63,7 @@ export default function LeadsDashboard() {
 
         // Socket.io Real-time Updates
         import("socket.io-client").then(({ io }) => {
-            const socket = io("http://localhost:5000");
+            const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000");
 
             socket.on("connect", () => {
                 console.log("Connected to WebSocket");
@@ -114,9 +112,7 @@ export default function LeadsDashboard() {
         triggerConfirm("Are you sure you want to delete this lead?", async () => {
             const token = localStorage.getItem("token");
             try {
-                await axios.delete(`http://localhost:5000/api/leads/${leadId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await api.delete(`/api/leads/${leadId}`);
                 setLeads((prev) => prev.filter((l) => l._id !== leadId));
                 showToast("Lead deleted successfully", "success");
             } catch (err) {

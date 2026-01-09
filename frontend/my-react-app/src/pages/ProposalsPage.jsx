@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axios.jsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import './ProposalsPage.css';
@@ -44,9 +44,9 @@ export default function ProposalsPage() {
         const token = localStorage.getItem('token');
         try {
             const [propRes, anaRes, leadRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/proposals', { headers: { Authorization: `Bearer ${token}` } }),
-                axios.get('http://localhost:5000/api/proposals/analytics', { headers: { Authorization: `Bearer ${token}` } }),
-                axios.get('http://localhost:5000/api/leads', { headers: { Authorization: `Bearer ${token}` } })
+                api.get('/api/proposals'),
+                api.get('/api/proposals/analytics'),
+                api.get('/api/leads')
             ]);
 
             setProposals(propRes.data);
@@ -83,28 +83,16 @@ export default function ProposalsPage() {
             let savedProposalId;
 
             if (editingProposal) {
-                const res = await axios.put(
-                    `http://localhost:5000/api/proposals/${editingProposal._id}`,
-                    proposalData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
+                const res = await api.put(
+                    `/api/proposals/${editingProposal._id}`,
+                    proposalData
                 );
                 savedProposalId = res.data._id;
                 addToast('Proposal updated successfully', 'success');
             } else {
-                const res = await axios.post(
-                    'http://localhost:5000/api/proposals',
-                    proposalData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
+                const res = await api.post(
+                    '/api/proposals',
+                    proposalData
                 );
                 savedProposalId = res.data._id;
                 addToast('Proposal created successfully', 'success');
@@ -116,14 +104,9 @@ export default function ProposalsPage() {
                 const formData = new FormData();
                 formData.append('file', data.file);
 
-                await axios.post(
-                    `http://localhost:5000/api/proposals/${savedProposalId}/upload`,
-                    formData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
+                await api.post(
+                    `/api/proposals/${savedProposalId}/upload`,
+                    formData
                 );
                 addToast('Document uploaded successfully', 'success');
             }
@@ -156,9 +139,7 @@ export default function ProposalsPage() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/proposals/${proposalId}/documents/${docId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/api/proposals/${proposalId}/documents/${docId}`);
             addToast('Document deleted successfully', 'success');
 
             // Update local state if editing
@@ -183,9 +164,7 @@ export default function ProposalsPage() {
         if (!itemToDelete) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/proposals/${itemToDelete}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/api/proposals/${itemToDelete}`);
             fetchData();
             showToast("Proposal deleted successfully", "success");
         } catch (err) {
@@ -500,7 +479,7 @@ export default function ProposalsPage() {
                                                                     {p.documents.map((doc, idx) => (
                                                                         <a
                                                                             key={idx}
-                                                                            href={`http://localhost:5000${doc.url}`}
+                                                                            href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${doc.url}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             style={{ color: '#0066cc', textDecoration: 'none', fontSize: '0.9rem' }}

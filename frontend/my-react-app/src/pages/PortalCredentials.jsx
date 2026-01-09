@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axios.jsx';
 import { useToast } from '../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,9 +36,7 @@ const PortalCredentials = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get("http://localhost:5000/api/credentials", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get("/api/credentials");
             setCredentials(res.data);
             setFilteredCredentials(res.data);
         } catch (err) {
@@ -55,14 +53,10 @@ const PortalCredentials = () => {
             const token = localStorage.getItem('token');
 
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/credentials/${editingId}`, newCred, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await api.put(`/api/credentials/${editingId}`, newCred);
                 addToast("Credential updated successfully", 'success');
             } else {
-                await axios.post("http://localhost:5000/api/credentials", newCred, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await api.post("/api/credentials", newCred);
                 addToast("Credential saved successfully", 'success');
             }
 
@@ -77,9 +71,7 @@ const PortalCredentials = () => {
         if (!window.confirm("Delete this credential?")) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/credentials/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/api/credentials/${id}`);
             addToast("Deleted successfully", 'success');
             fetchCredentials();
         } catch (err) {
