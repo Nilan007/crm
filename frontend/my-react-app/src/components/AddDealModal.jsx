@@ -74,7 +74,7 @@ export default function AddDealModal({ isOpen, onClose, onDealAdded }) {
         const token = localStorage.getItem("token");
         try {
             await axios.post(
-                "http://localhost:5000/api/leads",
+                "https://crm-backend-w02x.onrender.com/api/leads",
                 {
                     ...formData,
                     value: Number(formData.value) || 0,

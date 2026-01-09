@@ -24,7 +24,7 @@ export default function PartnersPage() {
     const fetchPartners = async () => {
         const token = localStorage.getItem("token");
         try {
-            const res = await axios.get("http://localhost:5000/api/partners", {
+            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/partners", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPartners(res.data);
@@ -43,7 +43,7 @@ export default function PartnersPage() {
         setConfirmCallback(() => async () => {
             const token = localStorage.getItem("token");
             try {
-                await axios.delete(`http://localhost:5000/api/partners/${id}`, {
+                await axios.delete(`https://crm-backend-w02x.onrender.com/api/partners/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setPartners(prev => prev.filter(p => p._id !== id));
@@ -71,7 +71,7 @@ export default function PartnersPage() {
 
         const token = localStorage.getItem("token");
         try {
-            await axios.post(`http://localhost:5000/api/partners/${partnerId}/upload`, formData, {
+            await axios.post(`https://crm-backend-w02x.onrender.com/api/partners/${partnerId}/upload`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`
@@ -89,7 +89,7 @@ export default function PartnersPage() {
         const token = localStorage.getItem("token");
         try {
             showToast("Analyzing capability statement...", "info");
-            await axios.post(`http://localhost:5000/api/partners/${partnerId}/analyze`, {}, {
+            await axios.post(`https://crm-backend-w02x.onrender.com/api/partners/${partnerId}/analyze`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchPartners(); // Refresh UI
@@ -227,13 +227,13 @@ export default function PartnersPage() {
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                             {partner.files.map((f, i) => (
                                                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px', background: '#f4f5f7', borderRadius: '4px' }}>
-                                                    <a href={`http://localhost:5000${f.url}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', color: '#0052cc' }}>📄 {f.name || `Doc ${i + 1}`}</a>
+                                                    <a href={`https://crm-backend-w02x.onrender.com${f.url}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', color: '#0052cc' }}>📄 {f.name || `Doc ${i + 1}`}</a>
                                                     <button
                                                         onClick={async () => {
                                                             try {
                                                                 const token = localStorage.getItem("token");
                                                                 const updatedFiles = partner.files.filter((_, idx) => idx !== i);
-                                                                await axios.put(`http://localhost:5000/api/partners/${partner._id}`,
+                                                                await axios.put(`https://crm-backend-w02x.onrender.com/api/partners/${partner._id}`,
                                                                     { files: updatedFiles },
                                                                     { headers: { Authorization: `Bearer ${token}` } }
                                                                 );

@@ -19,7 +19,7 @@ const StateCIOPage = () => {
         setModalOpen(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/state-cio/${stateName}`, {
+            const res = await axios.get(`https://crm-backend-w02x.onrender.com/api/state-cio/${stateName}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -48,7 +48,7 @@ const StateCIOPage = () => {
         setSaving(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post("http://localhost:5000/api/state-cio", {
+            await axios.post("https://crm-backend-w02x.onrender.com/api/state-cio", {
                 stateName: selectedState.name,
                 cios: cios
             }, {

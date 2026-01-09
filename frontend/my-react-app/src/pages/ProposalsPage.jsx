@@ -479,7 +479,7 @@ export default function ProposalsPage() {
                                                                     {p.documents.map((doc, idx) => (
                                                                         <a
                                                                             key={idx}
-                                                                            href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${doc.url}`}
+                                                                            href={`${import.meta.env.VITE_API_URL || 'https://crm-backend-w02x.onrender.com'}${doc.url}`}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             style={{ color: '#0066cc', textDecoration: 'none', fontSize: '0.9rem' }}

@@ -22,7 +22,7 @@ export default function CompanyProfile() {
     const fetchProfiles = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get('http://localhost:5000/api/company-profile', {
+            const res = await axios.get('https://crm-backend-w02x.onrender.com/api/company-profile', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Ensure response is always an array
@@ -66,12 +66,12 @@ export default function CompanyProfile() {
             let res;
             if (selectedProfile._id) {
                 // Update existing
-                res = await axios.put(`http://localhost:5000/api/company-profile/${selectedProfile._id}`, selectedProfile, {
+                res = await axios.put(`https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}`, selectedProfile, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
                 // Create new
-                res = await axios.post('http://localhost:5000/api/company-profile', selectedProfile, {
+                res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile', selectedProfile, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -101,7 +101,7 @@ export default function CompanyProfile() {
 
         try {
             const res = await axios.post(
-                `http://localhost:5000/api/company-profile/${selectedProfile._id}/certifications`,
+                `https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}/certifications`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -120,7 +120,7 @@ export default function CompanyProfile() {
         const token = localStorage.getItem('token');
         try {
             const res = await axios.delete(
-                `http://localhost:5000/api/company-profile/${selectedProfile._id}/certifications/${fileId}`,
+                `https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}/certifications/${fileId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setSelectedProfile(prev => ({ ...prev, certificationAttachments: res.data }));
@@ -139,7 +139,7 @@ export default function CompanyProfile() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/company-profile/upload', formData, {
+            const res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile/upload', formData, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             });
 
@@ -457,7 +457,7 @@ export default function CompanyProfile() {
                                                 <li key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'white', marginBottom: '8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                         <span style={{ fontSize: '1.2rem' }}>📄</span>
-                                                        <a href={`http://localhost:5000${file.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#3182ce', textDecoration: 'none', fontWeight: 500 }}>
+                                                        <a href={`https://crm-backend-w02x.onrender.com${file.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#3182ce', textDecoration: 'none', fontWeight: 500 }}>
                                                             {file.name}
                                                         </a>
                                                     </div>
@@ -564,7 +564,7 @@ export default function CompanyProfile() {
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                                 <span style={{ fontSize: '1.5rem', background: '#e6fcff', padding: '8px', borderRadius: '8px' }}>📄</span>
                                                                 <div>
-                                                                    <a href={`http://localhost:5000${cert.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0052cc', fontWeight: '600', textDecoration: 'none', display: 'block', marginBottom: '2px' }}>
+                                                                    <a href={`https://crm-backend-w02x.onrender.com${cert.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0052cc', fontWeight: '600', textDecoration: 'none', display: 'block', marginBottom: '2px' }}>
                                                                         {cert.name}
                                                                     </a>
                                                                     <div style={{ fontSize: '0.8rem', color: '#6b778c' }}>Uploaded: {new Date(cert.uploadedAt).toLocaleDateString()}</div>

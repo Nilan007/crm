@@ -32,7 +32,7 @@ export default function OrgChartPage() {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/state-org', {
+            const res = await axios.get('https://crm-backend-w02x.onrender.com/api/state-org', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEntries(res.data);
@@ -79,7 +79,7 @@ export default function OrgChartPage() {
         if (!itemToDelete) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/state-org/${itemToDelete}`, {
+            await axios.delete(`https://crm-backend-w02x.onrender.com/api/state-org/${itemToDelete}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             addToast("Entry deleted successfully", "success");
@@ -105,7 +105,7 @@ export default function OrgChartPage() {
             if (editingEntry) {
                 // 1. Update Text Data
                 const res = await axios.put(
-                    `http://localhost:5000/api/state-org/${editingEntry._id}`,
+                    `https://crm-backend-w02x.onrender.com/api/state-org/${editingEntry._id}`,
                     formData,
                     { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
                 );
@@ -119,7 +119,7 @@ export default function OrgChartPage() {
                     });
 
                     await axios.post(
-                        `http://localhost:5000/api/state-org/${savedId}/files`,
+                        `https://crm-backend-w02x.onrender.com/api/state-org/${savedId}/files`,
                         uploadFormData,
                         { headers: { Authorization: `Bearer ${token}` } } // Let Axios set multipart
                     );
@@ -140,7 +140,7 @@ export default function OrgChartPage() {
                 }
 
                 await axios.post(
-                    'http://localhost:5000/api/state-org',
+                    'https://crm-backend-w02x.onrender.com/api/state-org',
                     createFormData,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -161,7 +161,7 @@ export default function OrgChartPage() {
         if (!editingEntry) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/state-org/${editingEntry._id}/files/${fileId}`, {
+            await axios.delete(`https://crm-backend-w02x.onrender.com/api/state-org/${editingEntry._id}/files/${fileId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             addToast("File deleted", "success");
@@ -285,7 +285,7 @@ export default function OrgChartPage() {
                                         {entry.files.length > 0 ? (
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                                 {entry.files.slice(0, 3).map((f, i) => (
-                                                    <a key={i} href={`http://localhost:5000${f.url}`} target="_blank" rel="noreferrer"
+                                                    <a key={i} href={`https://crm-backend-w02x.onrender.com${f.url}`} target="_blank" rel="noreferrer"
                                                         style={{ fontSize: '0.9rem', color: '#0052CC', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                         📄 {f.name}
                                                     </a>

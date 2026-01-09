@@ -215,7 +215,7 @@ export default function KanbanBoard({ leads, onLeadUpdate, onRefresh, showToast,
     const token = localStorage.getItem("token");
     try {
       await axios.put(
-        `http://localhost:5000/api/leads/${leadId}/stage`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${leadId}/stage`,
         { stage: newStage },
         { headers: { Authorization: `Bearer ${token}` } }
       );

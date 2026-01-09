@@ -34,7 +34,7 @@ export default function ContactsView() {
         const fetchLeads = async () => {
             const token = localStorage.getItem("token");
             try {
-                const res = await axios.get("http://localhost:5000/api/leads", {
+                const res = await axios.get("https://crm-backend-w02x.onrender.com/api/leads", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setLeads(res.data);
@@ -113,7 +113,7 @@ export default function ContactsView() {
 
             const token = localStorage.getItem("token");
             await axios.put(
-                `http://localhost:5000/api/leads/${editFormData.sourceLeadId}`,
+                `https://crm-backend-w02x.onrender.com/api/leads/${editFormData.sourceLeadId}`,
                 { ...leadToUpdate, contacts: updatedContacts },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -182,7 +182,7 @@ export default function ContactsView() {
 
             const token = localStorage.getItem("token");
             await axios.put(
-                `http://localhost:5000/api/leads/${newContactData.targetLeadId}`,
+                `https://crm-backend-w02x.onrender.com/api/leads/${newContactData.targetLeadId}`,
                 { ...leadToUpdate, contacts: updatedContacts },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -221,7 +221,7 @@ export default function ContactsView() {
 
             const token = localStorage.getItem("token");
             await axios.put(
-                `http://localhost:5000/api/leads/${contactToDelete.sourceLeadId}`,
+                `https://crm-backend-w02x.onrender.com/api/leads/${contactToDelete.sourceLeadId}`,
                 { contacts: updatedContacts },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

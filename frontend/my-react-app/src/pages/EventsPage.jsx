@@ -33,7 +33,7 @@ export default function EventsPage() {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get("http://localhost:5000/api/events", {
+            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/events", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Ideally map fields if they differ, but we used standard start/end
@@ -69,12 +69,12 @@ export default function EventsPage() {
         try {
             if (selectedEvent) {
                 // UPDATE
-                await axios.put(`http://localhost:5000/api/events/${selectedEvent._id}`, formData, {
+                await axios.put(`https://crm-backend-w02x.onrender.com/api/events/${selectedEvent._id}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
                 // CREATE
-                await axios.post("http://localhost:5000/api/events", formData, {
+                await axios.post("https://crm-backend-w02x.onrender.com/api/events", formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -89,7 +89,7 @@ export default function EventsPage() {
         if (!window.confirm("Delete this event?")) return;
         const token = localStorage.getItem("token");
         try {
-            await axios.delete(`http://localhost:5000/api/events/${id}`, {
+            await axios.delete(`https://crm-backend-w02x.onrender.com/api/events/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setShowModal(false);

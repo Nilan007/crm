@@ -41,7 +41,7 @@ export default function ForecastPage() {
         }
 
         try {
-            const res = await axios.get("http://localhost:5000/api/leads", {
+            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/leads", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setLeads(res.data);
@@ -89,7 +89,7 @@ export default function ForecastPage() {
         triggerConfirm("Are you sure you want to delete this forecast?", async () => {
             const token = localStorage.getItem("token");
             try {
-                await axios.delete(`http://localhost:5000/api/leads/${leadId}`, {
+                await axios.delete(`https://crm-backend-w02x.onrender.com/api/leads/${leadId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setLeads((prev) => prev.filter((l) => l._id !== leadId));

@@ -164,7 +164,7 @@ export default function ForecastKanban({ leads, onLeadUpdate, onRefresh, showToa
         const token = localStorage.getItem("token");
         try {
             await axios.put(
-                `http://localhost:5000/api/leads/${leadId}`,
+                `https://crm-backend-w02x.onrender.com/api/leads/${leadId}`,
                 { forecastStage: newStage },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -183,7 +183,7 @@ export default function OrgChartModal({ isOpen, onClose, onSave, onDeleteFile, i
                                 <ul style={{ margin: '5px 0 0 0', paddingLeft: '20px', fontSize: '13px' }}>
                                     {initialData.files.map((file) => (
                                         <li key={file._id} style={{ marginBottom: '4px', display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
-                                            <a href={`http://localhost:5000${file.url}`} target="_blank" rel="noreferrer" style={{ color: '#0052CC', textDecoration: 'none', flexGrow: 1 }}>
+                                            <a href={`https://crm-backend-w02x.onrender.com${file.url}`} target="_blank" rel="noreferrer" style={{ color: '#0052CC', textDecoration: 'none', flexGrow: 1 }}>
                                                 {file.name}
                                             </a>
                                             <button

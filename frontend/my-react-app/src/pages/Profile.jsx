@@ -20,7 +20,7 @@ export default function Profile() {
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            const res = await axios.get("http://localhost:5000/api/auth/profile", {
+            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/auth/profile", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(res.data);
@@ -43,7 +43,7 @@ export default function Profile() {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.put("http://localhost:5000/api/auth/profile", user, {
+            const res = await axios.put("https://crm-backend-w02x.onrender.com/api/auth/profile", user, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

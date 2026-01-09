@@ -63,7 +63,7 @@ export default function LeadsDashboard() {
 
         // Socket.io Real-time Updates
         import("socket.io-client").then(({ io }) => {
-            const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000");
+            const socket = io(import.meta.env.VITE_API_URL || "https://crm-backend-w02x.onrender.com");
 
             socket.on("connect", () => {
                 console.log("Connected to WebSocket");

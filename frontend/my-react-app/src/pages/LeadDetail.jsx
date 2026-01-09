@@ -104,7 +104,7 @@ export default function LeadDetail() {
   const fetchLead = useCallback(async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/leads/${id}`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = res.data;
@@ -170,7 +170,7 @@ export default function LeadDetail() {
   const saveLead = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/leads/${id}`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
         {
           ...formData,
           value: Number(formData.value) || 0,
@@ -192,7 +192,7 @@ export default function LeadDetail() {
     triggerConfirm("Are you sure you want to delete this lead permanently?", async () => {
       try {
         await axios.delete(
-          `http://localhost:5000/api/leads/${id}`,
+          `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         navigate("/");
@@ -211,7 +211,7 @@ export default function LeadDetail() {
       // Immediate Save (View Mode)
       try {
         await axios.put(
-          `http://localhost:5000/api/leads/${id}`,
+          `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
           { contacts: updatedContacts },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -246,7 +246,7 @@ export default function LeadDetail() {
       const updatedContacts = lead.contacts.filter((_, i) => i !== index);
       try {
         await axios.put(
-          `http://localhost:5000/api/leads/${id}`,
+          `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
           { contacts: updatedContacts },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -291,7 +291,7 @@ export default function LeadDetail() {
 
     try {
       // 1. Upload File
-      const uploadRes = await axios.post("http://localhost:5000/api/leads/upload", uploadData, {
+      const uploadRes = await axios.post("https://crm-backend-w02x.onrender.com/api/leads/upload", uploadData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`
@@ -306,7 +306,7 @@ export default function LeadDetail() {
 
       // 3. Update Lead
       await axios.put(
-        `http://localhost:5000/api/leads/${id}`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}`,
         { attachments: updatedAttachments },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -385,7 +385,7 @@ export default function LeadDetail() {
   const handleScoreDeal = async () => {
     setScoringLoading(true);
     try {
-      const res = await axios.post(`http://localhost:5000/api/ai/score/${id}`, {}, {
+      const res = await axios.post(`https://crm-backend-w02x.onrender.com/api/ai/score/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAiResult(res.data);
@@ -407,7 +407,7 @@ export default function LeadDetail() {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/leads/${id}/activities`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}/activities`,
         { type: activityType, dueDate: finalDate, note: activityNote },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -426,7 +426,7 @@ export default function LeadDetail() {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/leads/${id}/activities/${activityId}`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}/activities/${activityId}`,
         { note: editNote, dueDate: finalDate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -441,7 +441,7 @@ export default function LeadDetail() {
   const completeActivity = async (activityId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/leads/${id}/activities/${activityId}/status`,
+        `https://crm-backend-w02x.onrender.com/api/leads/${id}/activities/${activityId}/status`,
         { status: "Done" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -456,7 +456,7 @@ export default function LeadDetail() {
     triggerConfirm("Are you sure you want to delete this activity?", async () => {
       try {
         await axios.delete(
-          `http://localhost:5000/api/leads/${id}/activities/${activityId}`,
+          `https://crm-backend-w02x.onrender.com/api/leads/${id}/activities/${activityId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         fetchLead();
@@ -775,7 +775,7 @@ export default function LeadDetail() {
                 {lead.attachments && lead.attachments.length > 0 ? lead.attachments.map((att, index) => (
                   <div key={index} className="attachment-item" style={{ justifyContent: 'space-between' }}>
                     <div>
-                      <a href={`http://localhost:5000${att.url}`} target="_blank" rel="noopener noreferrer">📄 {att.name}</a>
+                      <a href={`https://crm-backend-w02x.onrender.com${att.url}`} target="_blank" rel="noopener noreferrer">📄 {att.name}</a>
                       <span style={{ fontSize: '0.8rem', color: '#888', marginLeft: '10px' }}>{new Date(att.uploadedAt).toLocaleDateString()}</span>
                     </div>
                     {editing && (

@@ -21,7 +21,7 @@ const PortalModal = ({ isOpen, onClose }) => {
     const fetchPortals = async () => {
         setLoading(true);
         try {
-            const res = await axios.get("http://localhost:5000/api/portals");
+            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/portals");
             setPortals(res.data);
         } catch (err) {
             console.error("Failed to load portals", err);
@@ -33,7 +33,7 @@ const PortalModal = ({ isOpen, onClose }) => {
     const handleAdd = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/portals", newPortal);
+            await axios.post("https://crm-backend-w02x.onrender.com/api/portals", newPortal);
             setNewPortal({ name: '', url: '', category: 'State' });
             fetchPortals();
         } catch (err) {
@@ -46,7 +46,7 @@ const PortalModal = ({ isOpen, onClose }) => {
         e.preventDefault(); // Prevent link click
         if (window.confirm("Delete this portal?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/portals/${id}`);
+                await axios.delete(`https://crm-backend-w02x.onrender.com/api/portals/${id}`);
                 fetchPortals();
             } catch (err) {
                 addToast("Failed to delete", 'error');
@@ -63,7 +63,7 @@ const PortalModal = ({ isOpen, onClose }) => {
 
     const handleUpdate = async () => {
         try {
-            await axios.put(`http://localhost:5000/api/portals/${editingId}`, editForm);
+            await axios.put(`https://crm-backend-w02x.onrender.com/api/portals/${editingId}`, editForm);
             setEditingId(null);
             fetchPortals();
         } catch (err) {

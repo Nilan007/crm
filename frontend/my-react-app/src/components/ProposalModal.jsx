@@ -187,7 +187,7 @@ export default function ProposalModal({ isOpen, onClose, onSave, leads, initialD
                                 {initialData.documents.map((doc, idx) => (
                                     <li key={idx} style={{ padding: '8px 0', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <span>📄</span>
-                                        <a href={`http://localhost:5000${doc.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none', flexGrow: 1 }}>
+                                        <a href={`https://crm-backend-w02x.onrender.com${doc.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none', flexGrow: 1 }}>
                                             {doc.name}
                                         </a>
                                         <span style={{ fontSize: '0.8em', color: '#888' }}>
