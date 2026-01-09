@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axios';
 import { useToast } from '../context/ToastContext';
 import FileUpload from '../components/FileUpload';
 import './CompanyProfile.css';
@@ -20,16 +20,14 @@ export default function CompanyProfile() {
     }, []);
 
     const fetchProfiles = async () => {
-        const token = localStorage.getItem('token');
         try {
-            const res = await axios.get('https://crm-backend-w02x.onrender.com/api/company-profile', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get('/api/company-profile');
             // Ensure response is always an array
             const data = Array.isArray(res.data) ? res.data : (res.data ? [res.data] : []);
             setProfiles(data);
         } catch (err) {
             console.error('Error fetching profiles:', err);
+            // Silent fail or toast? Toast might spam if backend 500 loop
         } finally {
             setLoading(false);
         }
@@ -65,16 +63,15 @@ export default function CompanyProfile() {
             return;
         }
         setSaving(true);
-        const token = localStorage.getItem('token');
 
         // Helper to clean payload
         const cleanPayload = (obj) => {
             const cleaned = {};
             Object.keys(obj).forEach(key => {
                 const val = obj[key];
-                // Remove null, undefined, empty strings, and NaN
-                // Keep false (boolean) and 0 (number)
-                if (val !== null && val !== undefined && val !== '' && !(typeof val === 'number' && isNaN(val))) {
+                // Remove null, undefined, and NaN
+                // Keep false (boolean), 0 (number), and empty strings
+                if (val !== null && val !== undefined && !(typeof val === 'number' && isNaN(val))) {
                     // Recursively clean objects if needed, but for now flat fields are main concern
                     cleaned[key] = val;
                 }
@@ -88,14 +85,10 @@ export default function CompanyProfile() {
             let res;
             if (selectedProfile._id) {
                 // Update existing
-                res = await axios.put(`https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}`, payload, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                res = await api.put(`/api/company-profile/${selectedProfile._id}`, payload);
             } else {
                 // Create new
-                res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile', payload, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                res = await api.post('/api/company-profile', payload);
             }
 
             addToast('Company profile saved successfully!', 'success');
@@ -119,13 +112,12 @@ export default function CompanyProfile() {
 
         const formData = new FormData();
         formData.append('file', file);
-        const token = localStorage.getItem('token');
 
         try {
-            const res = await axios.post(
-                `https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}/certifications`,
+            const res = await api.post(
+                `/api/company-profile/${selectedProfile._id}/certifications`,
                 formData,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { 'Content-Type': 'multipart/form-data' } }
             );
             setSelectedProfile(prev => ({ ...prev, certificationAttachments: res.data }));
             addToast("Certification uploaded successfully.", 'success');
@@ -139,11 +131,9 @@ export default function CompanyProfile() {
         if (!window.confirm("Are you sure you want to permanently delete this file?")) return;
         if (!selectedProfile._id) return;
 
-        const token = localStorage.getItem('token');
         try {
-            const res = await axios.delete(
-                `https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}/certifications/${fileId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await api.delete(
+                `/api/company-profile/${selectedProfile._id}/certifications/${fileId}`
             );
             setSelectedProfile(prev => ({ ...prev, certificationAttachments: res.data }));
         } catch (err) {
@@ -160,9 +150,8 @@ export default function CompanyProfile() {
         formData.append('file', file);
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile/upload', formData, {
-                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+            const res = await api.post('/api/company-profile/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             // Add attachment to the relevant list in the profile
@@ -243,8 +232,10 @@ export default function CompanyProfile() {
                                     {p.samStatus || 'Unknown'}
                                 </span>
                             </div>
+                            <div className="card-detail">
+                                <span>Updated: {p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : 'N/A'}</span>
+                            </div>
                             <div className="card-footer">
-                                <span>Updated: {new Date(p.updatedAt).toLocaleDateString()}</span>
                                 <span className="arrow">➔</span>
                             </div>
                         </div>
@@ -479,11 +470,11 @@ export default function CompanyProfile() {
                                                 <li key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'white', marginBottom: '8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                         <span style={{ fontSize: '1.2rem' }}>📄</span>
-                                                        <a href={`https://crm-backend-w02x.onrender.com${file.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#3182ce', textDecoration: 'none', fontWeight: 500 }}>
+                                                        <a href={`${import.meta.env.VITE_API_URL || 'https://crm-backend-w02x.onrender.com'}${file.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#3182ce', textDecoration: 'none', fontWeight: 500 }}>
                                                             {file.name}
                                                         </a>
                                                     </div>
-                                                    <span style={{ fontSize: '0.8rem', color: '#718096' }}>{new Date(file.uploadedAt).toLocaleDateString()}</span>
+                                                    <span style={{ fontSize: '0.8rem', color: '#718096' }}>{file.uploadedAt ? new Date(file.uploadedAt).toLocaleDateString() : 'N/A'}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -586,10 +577,10 @@ export default function CompanyProfile() {
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                                 <span style={{ fontSize: '1.5rem', background: '#e6fcff', padding: '8px', borderRadius: '8px' }}>📄</span>
                                                                 <div>
-                                                                    <a href={`https://crm-backend-w02x.onrender.com${cert.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0052cc', fontWeight: '600', textDecoration: 'none', display: 'block', marginBottom: '2px' }}>
+                                                                    <a href={`${import.meta.env.VITE_API_URL || 'https://crm-backend-w02x.onrender.com'}${cert.url}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0052cc', fontWeight: '600', textDecoration: 'none', display: 'block', marginBottom: '2px' }}>
                                                                         {cert.name}
                                                                     </a>
-                                                                    <div style={{ fontSize: '0.8rem', color: '#6b778c' }}>Uploaded: {new Date(cert.uploadedAt).toLocaleDateString()}</div>
+                                                                    <div style={{ fontSize: '0.8rem', color: '#6b778c' }}>Uploaded: {cert.uploadedAt ? new Date(cert.uploadedAt).toLocaleDateString() : 'N/A'}</div>
                                                                 </div>
                                                             </div>
                                                             <button
@@ -790,7 +781,7 @@ export default function CompanyProfile() {
                             {saving ? 'Saving...' : 'Save All Changes'}
                         </button>
                         <p style={{ color: '#666', fontSize: '0.9rem', marginTop: '10px' }}>
-                            Last updated: {profile?.lastUpdated ? new Date(profile.lastUpdated).toLocaleString() : 'Never'}
+                            Last updated: {profile?.updatedAt ? new Date(profile.updatedAt).toLocaleString() : 'Never'}
                         </p>
                     </div>
                 </div>
@@ -798,4 +789,3 @@ export default function CompanyProfile() {
         </div >
     );
 }
-
