@@ -46,6 +46,7 @@ app.use("/api/proposals", require("./routes/proposalRoute"));
 app.use("/api/state-org", require("./routes/stateOrgRoute"));
 app.use("/api/credentials", require("./routes/credentialRoute"));
 app.use("/api/state-cio", require("./routes/stateCIORoute"));
+app.use("/api/contacts", require("./routes/contactRoute"));
 
 
 /* ================= HEALTH CHECK ================= */
