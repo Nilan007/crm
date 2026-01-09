@@ -33,11 +33,20 @@ const upload = multer({ storage });
 // Initialize GridFSBucket for retrieval
 let gfsBucket;
 const conn = mongoose.connection;
-conn.once('open', () => {
-    gfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-        bucketName: 'uploads'
-    });
-});
+
+const initBucket = () => {
+    if (!gfsBucket && conn.db) {
+        gfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+            bucketName: 'uploads'
+        });
+        console.log("✅ GridFS Bucket Initialized");
+    }
+};
+
+if (conn.readyState === 1) {
+    initBucket();
+}
+conn.once('open', initBucket);
 
 /* ================= SERVE FILES ================= */
 // Place this BEFORE /:id routes to prevent conflict
