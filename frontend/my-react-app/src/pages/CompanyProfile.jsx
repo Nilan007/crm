@@ -60,6 +60,10 @@ export default function CompanyProfile() {
     };
 
     const handleSave = async () => {
+        if (!selectedProfile.legalName || !selectedProfile.legalName.trim()) {
+            addToast("Legal Company Name is required.", "error");
+            return;
+        }
         setSaving(true);
         const token = localStorage.getItem('token');
         try {
