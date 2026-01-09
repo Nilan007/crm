@@ -289,7 +289,7 @@ export default function ProposalsPage() {
                                     { title: 'Federal Proposals', stats: fedStats },
                                     { title: 'State Proposals', stats: stateStats },
                                     { title: 'Other Proposals', stats: otherStats }
-                                ].filter(s => s.stats.total > 0 || ['Federal Proposals', 'State Proposals'].includes(s.title)).map((section, idx) => (
+                                ].map((section, idx) => (
                                     <div key={idx} className="sector-section">
                                         <h2 style={{ fontSize: '1.3rem', color: '#172B4D', marginBottom: '16px', borderBottom: '2px solid #dfe1e6', paddingBottom: '8px', fontWeight: '600' }}>
                                             {section.title}
