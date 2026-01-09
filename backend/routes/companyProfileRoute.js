@@ -45,13 +45,14 @@ router.get('/:id', auth, async (req, res) => {
 
 /* ================= CREATE NEW PROFILE ================= */
 router.post('/', auth, async (req, res) => {
+    console.log("POST CompanyProfile Body:", JSON.stringify(req.body)); // DEBUG LOG
     if (!req.user || !req.user.id) {
         return res.status(401).json({ message: "User not authenticated" });
     }
     try {
         const profile = await CompanyProfile.create({
             ...req.body,
-            updatedBy: req.user.id
+            // updatedBy: req.user.id // TEMPORARY DEBUG: Comment out
         });
         res.status(201).json(profile);
     } catch (err) {
@@ -62,6 +63,7 @@ router.post('/', auth, async (req, res) => {
 
 /* ================= UPDATE PROFILE ================= */
 router.put('/:id', auth, async (req, res) => {
+    console.log("PUT CompanyProfile Body:", JSON.stringify(req.body)); // DEBUG LOG
     try {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -77,8 +79,8 @@ router.put('/:id', auth, async (req, res) => {
 
         const profile = await CompanyProfile.findByIdAndUpdate(
             req.params.id,
-            { ...updates, updatedBy: req.user.id },
-            { new: true, runValidators: true } // Ensure validators run on update
+            { ...updates }, // TEMPORARY DEBUG: Removed updatedBy
+            { new: true, runValidators: true }
         );
 
         if (!profile) return res.status(404).json({ message: 'Profile not found' });
