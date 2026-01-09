@@ -105,7 +105,7 @@ export default function ChartsView({ leads }) {
                 {/* PIE: Leads by Stage */}
                 <div className="chart-wrapper card">
                     <h3 className="chart-title">Leads by Stage</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={300} minWidth={0}>
                         <PieChart>
                             <Pie
                                 data={stageData}
@@ -130,7 +130,7 @@ export default function ChartsView({ leads }) {
                 {/* PIE: Leads by Type */}
                 <div className="chart-wrapper card">
                     <h3 className="chart-title">Deal Type Distribution</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={300} minWidth={0}>
                         <PieChart>
                             <Pie
                                 data={typeData}
@@ -155,7 +155,7 @@ export default function ChartsView({ leads }) {
                 {/* BAR: Value by Stage */}
                 <div className="chart-wrapper card" style={{ gridColumn: 'span 2' }}>
                     <h3 className="chart-title">Pipeline Value by Stage ($)</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={300} minWidth={0}>
                         <BarChart data={stageValueData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />

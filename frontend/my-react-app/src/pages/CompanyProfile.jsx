@@ -66,16 +66,22 @@ export default function CompanyProfile() {
         }
         setSaving(true);
         const token = localStorage.getItem('token');
+        // Sanitize payload to remove empty strings for enum fields
+        const payload = { ...selectedProfile };
+        if (!payload.businessType) delete payload.businessType;
+        if (!payload.businessSize) delete payload.businessSize;
+        if (!payload.primeSubPreference) delete payload.primeSubPreference;
+
         try {
             let res;
             if (selectedProfile._id) {
                 // Update existing
-                res = await axios.put(`https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}`, selectedProfile, {
+                res = await axios.put(`https://crm-backend-w02x.onrender.com/api/company-profile/${selectedProfile._id}`, payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
                 // Create new
-                res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile', selectedProfile, {
+                res = await axios.post('https://crm-backend-w02x.onrender.com/api/company-profile', payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
