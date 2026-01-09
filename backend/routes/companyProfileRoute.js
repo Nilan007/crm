@@ -4,27 +4,65 @@ const CompanyProfile = require('../models/CompanyProfile');
 const auth = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const mongoose = require('mongoose');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const crypto = require('crypto');
 
-// Configure Multer
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadDir = path.join(__dirname, '../uploads/company-profile');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+// Configure GridFS Storage
+const createStorage = () => {
+    return new GridFsStorage({
+        url: process.env.MONGO_URI,
+        file: (req, file) => {
+            return new Promise((resolve, reject) => {
+                crypto.randomBytes(16, (err, buf) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    const filename = buf.toString('hex') + path.extname(file.originalname);
+                    const fileInfo = {
+                        filename: filename,
+                        bucketName: 'uploads' // collection name will be uploads.files
+                    };
+                    resolve(fileInfo);
+                });
+            });
         }
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+    });
+};
+
+const storage = createStorage();
+const upload = multer({ storage });
+
+// Initialize GridFSBucket for retrieval
+let gfsBucket;
+const conn = mongoose.connection;
+conn.once('open', () => {
+    gfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: 'uploads'
+    });
 });
-const upload = multer({ storage: storage });
+
+/* ================= SERVE FILES ================= */
+// Place this BEFORE /:id routes to prevent conflict
+router.get('/files/:filename', (req, res) => {
+    if (!gfsBucket) return res.status(500).json({ message: 'Database functionality not fully initialized' });
+
+    const cursor = gfsBucket.find({ filename: req.params.filename });
+    cursor.toArray().then(files => { // use promise or callback depending on driver version, safe bet is stream or toArray
+        if (!files || files.length === 0) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+        gfsBucket.openDownloadStreamByName(req.params.filename).pipe(res);
+    }).catch(err => {
+        return res.status(404).json({ message: 'File not found' });
+    });
+});
+
 
 /* ================= GET ALL PROFILES ================= */
 router.get('/', auth, async (req, res) => {
     try {
-        const profiles = await CompanyProfile.find().sort({ lastUpdated: -1 });
+        const profiles = await CompanyProfile.find().sort({ updatedAt: -1 });
         res.json(profiles);
     } catch (err) {
         console.error('Error fetching profiles:', err);
@@ -45,7 +83,6 @@ router.get('/:id', auth, async (req, res) => {
 
 /* ================= CREATE NEW PROFILE ================= */
 router.post('/', auth, async (req, res) => {
-    // console.log("POST CompanyProfile Body:", JSON.stringify(req.body));
     if (!req.user || !req.user.id) {
         return res.status(401).json({ message: "User not authenticated" });
     }
@@ -64,7 +101,6 @@ router.post('/', auth, async (req, res) => {
 
 /* ================= UPDATE PROFILE ================= */
 router.put('/:id', auth, async (req, res) => {
-    // console.log("PUT CompanyProfile Body:", JSON.stringify(req.body));
     try {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -75,7 +111,7 @@ router.put('/:id', auth, async (req, res) => {
         delete updates._id;
         delete updates.__v;
         delete updates.createdAt;
-        delete updates.updatedAt;
+        delete updates.updatedAt; // Managed by timestamps: true
         delete updates.createdBy;
 
         const profile = await CompanyProfile.findByIdAndUpdate(
@@ -94,8 +130,6 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-
-
 /* ================= DELETE PROFILE ================= */
 router.delete('/:id', auth, async (req, res) => {
     try {
@@ -110,23 +144,22 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/upload', auth, upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
+    // Return the URL to our new GridFS serving route
     res.json({
         name: req.file.originalname,
-        url: `/uploads/company-profile/${req.file.filename}`,
+        url: `/api/company-profile/files/${req.file.filename}`,
         uploadedAt: new Date()
     });
 });
 
 /* ================= CERTIFICATION ATTACHMENTS ================= */
-
-// Upload a certification file to a profile
 router.post('/:id/certifications', auth, upload.single('file'), async (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
     try {
         const attachment = {
             name: req.file.originalname,
-            url: `/uploads/company-profile/${req.file.filename}`,
+            url: `/api/company-profile/files/${req.file.filename}`,
             uploadedAt: new Date()
         };
 
@@ -154,6 +187,10 @@ router.delete('/:id/certifications/:fileId', auth, async (req, res) => {
         );
 
         if (!profile) return res.status(404).json({ message: 'Profile not found' });
+
+        // Note: Actual file in GridFS is NOT deleted here to keep it simple, 
+        // but removing reference from profile is done.
+
         res.json(profile.certificationAttachments);
     } catch (err) {
         res.status(500).json({ message: 'Delete failed' });

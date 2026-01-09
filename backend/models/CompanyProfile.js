@@ -158,15 +158,7 @@ const companyProfileSchema = new mongoose.Schema({
     }],
 
     // Metadata
-    lastUpdated: { type: Date, default: Date.now },
-    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    createdAt: { type: Date, default: Date.now }
-});
-
-// Update lastUpdated on save - REMOVED to fix next() error
-// companyProfileSchema.pre('save', function (next) {
-//     this.lastUpdated = new Date();
-//     next();
-// });
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+}, { timestamps: true });
 
 module.exports = mongoose.model('CompanyProfile', companyProfileSchema);
