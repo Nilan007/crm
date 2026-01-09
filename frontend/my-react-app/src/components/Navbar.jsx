@@ -6,8 +6,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchTerm = searchParams.get("search") || "";
+  /* Search State Removed */
 
 
   // Notification States
@@ -65,16 +64,7 @@ export default function Navbar() {
     navigate("/login", { replace: true });
   };
 
-  const handleSearch = (e) => {
-    const term = e.target.value;
-    if (term) {
-      setSearchParams({ ...Object.fromEntries(searchParams), search: term });
-    } else {
-      const newParams = Object.fromEntries(searchParams);
-      delete newParams.search;
-      setSearchParams(newParams);
-    }
-  };
+  // Search functionality removed
 
   return (
     <>
@@ -116,16 +106,7 @@ export default function Navbar() {
             State / Federal
           </NavLink>
 
-          <div className="search-container">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search deals, contacts..."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
+
         </div>
 
         <div className="navbar-right">

@@ -284,7 +284,7 @@ export default function ProposalsPage() {
                     <>
                         {/* --- DASHBOARD VIEW --- */}
                         {activeTab === 'dashboard' && (
-                            <div className="dashboard-overview" style={{ display: 'flex', flexDirection: 'column', gap: '40px', paddingBottom: '40px' }}>
+                            <div className="dashboard-overview" style={{ display: 'flex', flexDirection: 'column', gap: '40px', paddingBottom: '120px' }}>
                                 {[
                                     { title: 'Federal Proposals', stats: fedStats },
                                     { title: 'State Proposals', stats: stateStats },
