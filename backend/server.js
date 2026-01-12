@@ -90,6 +90,14 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`✅ Server (Socket.io) running on http://localhost:${PORT}`);
+
+// Connect to DB, THEN start server to prevent race conditions
+connectDB().then(() => {
+  server.listen(PORT, () => {
+    console.log(`✅ Server (Socket.io) running on http://localhost:${PORT}`);
+    console.log(`✅ Database Connected & Ready`);
+  });
+}).catch(err => {
+  console.error("❌ Failed to connect to DB, server not started:", err);
+  process.exit(1);
 });

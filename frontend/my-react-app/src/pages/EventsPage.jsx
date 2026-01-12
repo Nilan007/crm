@@ -33,19 +33,78 @@ export default function EventsPage() {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get("https://crm-backend-w02x.onrender.com/api/events", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            // Ideally map fields if they differ, but we used standard start/end
-            const formatted = res.data.map(evt => ({
+            const headers = { Authorization: `Bearer ${token}` };
+
+            // Fetch both Events and Leads (for pipeline activities)
+            const [eventsRes, leadsRes] = await Promise.all([
+                axios.get("https://crm-backend-w02x.onrender.com/api/events", { headers }),
+                axios.get("https://crm-backend-w02x.onrender.com/api/leads", { headers })
+            ]);
+
+            // 1. Process Standard Events
+            const standardEvents = eventsRes.data.map(evt => ({
                 ...evt,
                 start: new Date(evt.start),
                 end: new Date(evt.end),
-                resourceId: evt._id
+                resourceId: evt._id,
+                type: 'event'
             }));
-            setEvents(formatted);
+
+            // 2. Process Leads for Key Dates & Activities
+            const leadEvents = [];
+            leadsRes.data.forEach(lead => {
+                // A. Key Dates (RFP, Award, Close)
+                if (lead.estimatedRfpDate) {
+                    leadEvents.push({
+                        _id: `rfp-${lead._id}`,
+                        title: `📄 RFP: ${lead.name}`,
+                        start: new Date(lead.estimatedRfpDate),
+                        end: new Date(lead.estimatedRfpDate),
+                        allDay: true,
+                        type: 'lead-date',
+                        status: 'RFP',
+                        registrationStatus: 'Register Not Required',
+                        url: `/lead/${lead._id}`
+                    });
+                }
+                if (lead.closeDate) {
+                    leadEvents.push({
+                        _id: `close-${lead._id}`,
+                        title: `🔒 Close: ${lead.name}`,
+                        start: new Date(lead.closeDate),
+                        end: new Date(lead.closeDate),
+                        allDay: true,
+                        type: 'lead-date',
+                        status: 'Close',
+                        registrationStatus: 'Register Not Required',
+                        url: `/lead/${lead._id}`
+                    });
+                }
+
+                // B. Activities (Calls, Meetings)
+                if (lead.activities && lead.activities.length > 0) {
+                    lead.activities.forEach(act => {
+                        if (act.dueDate) {
+                            leadEvents.push({
+                                _id: `act-${lead._id}-${act._id || Math.random()}`,
+                                title: `${act.type === 'Meeting' ? '📅' : '📞'} ${act.type}: ${lead.name}`,
+                                start: new Date(act.dueDate),
+                                end: new Date(new Date(act.dueDate).getTime() + 60 * 60 * 1000), // Assume 1 hour default
+                                type: 'lead-activity',
+                                status: act.status,
+                                registrationStatus: 'Register Not Required',
+                                description: act.note,
+                                url: `/lead/${lead._id}`
+                            });
+                        }
+                    });
+                }
+            });
+
+            setEvents([...standardEvents, ...leadEvents]);
         } catch (err) {
             console.error(err);
+            addToast("Failed to load calendar data", 'error');
         } finally {
             setLoading(false);
         }
