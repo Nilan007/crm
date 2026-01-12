@@ -28,6 +28,20 @@ app.use(cors({
 console.log("✅ CORS configured for: http://localhost:5173, http://localhost:5174");
 
 app.use(express.json()); // parse JSON bodies
+
+// Debug Middleware for Static Files
+app.use("/uploads", (req, res, next) => {
+  const filePath = path.join(__dirname, "uploads", req.path);
+  console.log(`📂 Static Request: ${req.path} -> Looking in: ${filePath}`);
+  const fs = require("fs");
+  if (fs.existsSync(filePath)) {
+    console.log("   ✅ File exists!");
+  } else {
+    console.log("   ❌ File NOT found!");
+  }
+  next();
+});
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve uploaded files using absolute path
 
 /* ================= ROUTES ================= */

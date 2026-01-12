@@ -478,7 +478,7 @@ export default function LeadDetail() {
       <div className="detail-header">
         {/* LEFT SIDE: Back + Title + Badges */}
         <div className="header-left">
-          <button className="back-btn" onClick={() => navigate("/dashboard")}>
+          <button className="back-btn" onClick={() => navigate("/pipeline")}>
             ⬅ Back to Board
           </button>
 
