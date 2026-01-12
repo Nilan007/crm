@@ -18,6 +18,28 @@
     font-size: 2rem;
     color: #172b4d;
     font-weight: 700;
+
+    /* Truncation Logic */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    cursor: default;
+    transition: all 0.2s ease;
+}
+
+.header-title.clickable-title {
+    cursor: pointer;
+}
+
+.header-title.clickable-title:hover {
+    color: #0052cc;
+}
+
+.header-title.expanded {
+    white-space: normal;
+    overflow: visible;
+    word-break: break-word;
 }
 
 .header-actions {

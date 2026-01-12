@@ -82,11 +82,11 @@ router.get("/", async (req, res) => {
 
             // STATE
             { name: "Texas DMV Modernization", dealType: "Pipeline", sector: "State", value: 2500000, stage: "opp in-progress", winProbability: 80, location: "Austin TX" },
-            { name: "California Wildfire AI Detection", dealType: "Forecast", sector: "State", value: 8000000, forecastStage: "Best Case", stage: "opp Nurturing", winProbability: 30, location: "Sacramento CA" },
+            { name: "California Wildfire AI Detection", dealType: "Forecast", sector: "State", value: 8000000, forecastStage: "High Priority", stage: "opp Nurturing", winProbability: 30, location: "Sacramento CA" },
 
             // OTHER
             { name: "City of Miami Smart Grid", dealType: "Pipeline", sector: "Others", value: 1500000, stage: "opp sourced", winProbability: 20, location: "Miami FL" },
-            { name: "Private Hospital Network Security", dealType: "Forecast", sector: "Others", value: 750000, forecastStage: "Commit", stage: "Win", winProbability: 90, location: "Chicago IL" }
+            { name: "Private Hospital Network Security", dealType: "Forecast", sector: "Others", value: 750000, forecastStage: "Low Priority", stage: "Win", winProbability: 90, location: "Chicago IL" }
         ];
 
         let createdLeads = 0;

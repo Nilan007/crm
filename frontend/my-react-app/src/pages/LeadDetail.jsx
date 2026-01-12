@@ -481,7 +481,19 @@ export default function LeadDetail() {
             ⬅ Back to Board
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <h1 className="header-title">{lead.name}</h1>
+            <h1 className="header-title">
+              <span
+                className={`truncated-text ${lead.name.length > 50 ? 'clickable-title' : ''}`}
+                title={lead.name}
+                onClick={(e) => {
+                  if (lead.name.length > 50) {
+                    e.target.classList.toggle('expanded');
+                  }
+                }}
+              >
+                {lead.name}
+              </span>
+            </h1>
             {!editing && <span className="status-badge" style={{ background: '#0052cc', color: 'white' }}>{lead.sector}</span>}
             {!editing && <span className="status-badge">{lead.opportunityStatus}</span>}
           </div>
