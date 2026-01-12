@@ -5,64 +5,27 @@ const auth = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
-const { GridFsStorage } = require('multer-gridfs-storage');
-const crypto = require('crypto');
+const fs = require('fs');
 
-// Configure GridFS Storage
-const storage = new GridFsStorage({
-    url: process.env.MONGO_URI, // Direct URL is often more stable for multer-gridfs-storage
-    options: { useNewUrlParser: true, useUnifiedTopology: true },
-    file: (req, file) => {
-        return new Promise((resolve, reject) => {
-            crypto.randomBytes(16, (err, buf) => {
-                if (err) {
-                    return reject(err);
-                }
-                const filename = buf.toString('hex') + path.extname(file.originalname);
-                const fileInfo = {
-                    filename: filename,
-                    bucketName: 'uploads'
-                };
-                resolve(fileInfo);
-            });
-        });
+// Configure Multer for file uploads (Disk Storage - same as leadRoute)
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, "../uploads");
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        // Use a unique filename
+        cb(null, Date.now() + "-" + file.originalname);
     }
 });
+
 const upload = multer({ storage });
 
-// Initialize GridFSBucket for retrieval
-let gfsBucket;
-const conn = mongoose.connection;
-
-const initBucket = () => {
-    if (!gfsBucket && conn.db) {
-        gfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-            bucketName: 'uploads'
-        });
-        console.log("✅ GridFS Bucket Initialized");
-    }
-};
-
-if (conn.readyState === 1) {
-    initBucket();
-}
-conn.once('open', initBucket);
-
-/* ================= SERVE FILES ================= */
-// Place this BEFORE /:id routes to prevent conflict
-router.get('/files/:filename', (req, res) => {
-    if (!gfsBucket) return res.status(500).json({ message: 'Database functionality not fully initialized' });
-
-    const cursor = gfsBucket.find({ filename: req.params.filename });
-    cursor.toArray().then(files => { // use promise or callback depending on driver version, safe bet is stream or toArray
-        if (!files || files.length === 0) {
-            return res.status(404).json({ message: 'File not found' });
-        }
-        gfsBucket.openDownloadStreamByName(req.params.filename).pipe(res);
-    }).catch(err => {
-        return res.status(404).json({ message: 'File not found' });
-    });
-});
+// NOTE: File retrieval is handled by express.static('/uploads') in server.js
+// We don't need a specific route for serving files anymore if we return the direct URL.
 
 
 /* ================= GET ALL PROFILES ================= */
@@ -150,10 +113,10 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/upload', auth, upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-    // Return the URL to our new GridFS serving route
+    // Return the URL for static serving
     res.json({
         name: req.file.originalname,
-        url: `/api/company-profile/files/${req.file.filename}`,
+        url: `/uploads/${req.file.filename}`,
         uploadedAt: new Date()
     });
 });
@@ -165,7 +128,7 @@ router.post('/:id/certifications', auth, upload.single('file'), async (req, res)
     try {
         const attachment = {
             name: req.file.originalname,
-            url: `/api/company-profile/files/${req.file.filename}`,
+            url: `/uploads/${req.file.filename}`,
             uploadedAt: new Date()
         };
 
