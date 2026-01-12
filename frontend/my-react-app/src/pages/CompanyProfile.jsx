@@ -155,7 +155,7 @@ export default function CompanyProfile() {
             const newAttachment = {
                 name: res.data.name,
                 url: res.data.url,
-                type: 'Document',
+                docType: 'Document', // Matches backend AttachmentSchema
                 uploadedAt: new Date()
             };
 

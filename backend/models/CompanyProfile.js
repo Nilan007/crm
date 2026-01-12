@@ -1,5 +1,14 @@
 const mongoose = require('mongoose');
 
+const mongoose = require('mongoose');
+
+const AttachmentSchema = new mongoose.Schema({
+    name: String,
+    url: String,
+    docType: String, // Renamed from 'type' to avoid Mongoose keyword collision
+    uploadedAt: { type: Date, default: Date.now }
+});
+
 const companyProfileSchema = new mongoose.Schema({
     // A. Legal & Business Information
     legalName: { type: String, required: true },
@@ -25,12 +34,7 @@ const companyProfileSchema = new mongoose.Schema({
         state: String,
         zip: String
     }],
-    legalAttachments: [{
-        name: String,
-        url: String,
-        type: String, // 'Articles', 'License', 'EIN Letter'
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    legalAttachments: [AttachmentSchema],
 
     // B. Federal & State Registration
     samStatus: { type: String, enum: ['Active', 'Expired', 'Not Registered'], default: 'Not Registered' },
@@ -42,12 +46,7 @@ const companyProfileSchema = new mongoose.Schema({
     }],
     gsaSchedule: String,
     naspoContracts: [String],
-    registrationAttachments: [{
-        name: String,
-        url: String,
-        type: String,
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    registrationAttachments: [AttachmentSchema],
 
     // C. Business Size & Socio-Economic Status
     businessSize: { type: String, enum: ['Small', 'Large'] },
@@ -65,11 +64,7 @@ const companyProfileSchema = new mongoose.Schema({
         isPrimary: { type: Boolean, default: false }
     }],
     pscCodes: [String],
-    certificationAttachments: [{
-        name: String,
-        url: String,
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    certificationAttachments: [AttachmentSchema],
 
     // D. Capability & Technical Profile
     coreCapabilities: String, // Rich text summary
@@ -78,11 +73,7 @@ const companyProfileSchema = new mongoose.Schema({
     technologyStack: [String],
     deliveryModels: [{ type: String, enum: ['Onsite', 'Hybrid', 'Remote', 'All'] }],
     securityCapabilities: String,
-    capabilityAttachments: [{
-        name: String,
-        url: String,
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    capabilityAttachments: [AttachmentSchema],
 
     // E. Past Performance & Experience
     pastPerformance: [{
@@ -112,11 +103,7 @@ const companyProfileSchema = new mongoose.Schema({
         limit: Number,
         expirationDate: Date
     }],
-    financialAttachments: [{
-        name: String,
-        url: String,
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    financialAttachments: [AttachmentSchema],
 
     // G. Compliance, Security & Certifications
     isoCertifications: [{
@@ -128,11 +115,7 @@ const companyProfileSchema = new mongoose.Schema({
     soc2: { type: String, enum: ['None', 'Type I', 'Type II'] },
     cmmcLevel: { type: String, enum: ['None', 'Level 1', 'Level 2', 'Level 3'] },
     securityClearanceLevel: String,
-    complianceAttachments: [{
-        name: String,
-        url: String,
-        uploadedAt: { type: Date, default: Date.now }
-    }],
+    complianceAttachments: [AttachmentSchema],
 
     // H. Key Contacts
     keyContacts: [{
