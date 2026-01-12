@@ -38,6 +38,7 @@ app.use("/api/ai", require("./routes/aiRoute"));
 app.use("/api/portals", require("./routes/portalRoute"));
 app.use("/api/events", require("./routes/eventRoute"));
 app.use("/api/notifications", require("./routes/notificationRoute"));
+app.use("/api/seed", require("./routes/seedRoute")); // Temporary Seeding Route
 app.use("/api/partners", require("./routes/partnerRoute"));
 app.use("/api/company-profile", require("./routes/companyProfileRoute"));
 app.use("/api/proposals", require("./routes/proposalRoute"));

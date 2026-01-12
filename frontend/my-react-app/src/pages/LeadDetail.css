@@ -32,6 +32,61 @@
     gap: 20px;
 }
 
+.detail-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+}
+
+.detail-main {
+    flex: 3;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    min-width: 600px;
+    /* Prevent crushing on medium screens */
+}
+
+.detail-sidebar {
+    flex: 1;
+    min-width: 300px;
+    /* Ensure sidebar stays readable */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 12-14 inch Laptop Specifics */
+@media (max-width: 1366px) {
+    .detail-container {
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .detail-main {
+        padding: 20px;
+        min-width: 100%;
+        /* Stack vertically if too squeezed */
+    }
+
+    .detail-sidebar {
+        min-width: 100%;
+        flex-direction: row;
+        /* Horizontal sidebar items when stacked? Or keep vertical */
+        flex-wrap: wrap;
+    }
+
+    .detail-sidebar>* {
+        flex: 1;
+        min-width: 250px;
+    }
+}
+
 .detail-grid-2 {
     display: grid;
     grid-template-columns: 1fr;

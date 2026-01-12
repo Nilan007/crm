@@ -210,13 +210,43 @@ export default function CompanyProfile() {
                 <div className="profiles-grid">
                     {profiles.map(p => (
                         <div key={p._id} className="company-card" onClick={() => handleEditProfile(p)}>
-                            <h3>{p.legalName || 'Untitled'}</h3>
-                            <div className="card-detail"><strong>UEI:</strong> {p.uei || '-'}</div>
-                            <div className="card-detail"><strong>Status:</strong> {p.samStatus}</div>
-                            <div className="card-footer"><span className="arrow">➔</span></div>
+                            <div className="card-header">
+                                <h3 title={p.legalName}>{p.legalName || 'Untitled Company'}</h3>
+                                <div className="card-actions">
+                                    <span className="edit-icon">✎</span>
+                                </div>
+                            </div>
+
+                            <div className="card-badges">
+                                {p.businessType && <span className="badge type-badge">{p.businessType}</span>}
+                                <span className={`badge status-badge ${p.samStatus === 'Active' ? 'active' : 'expired'}`}>
+                                    {p.samStatus || 'Unknown'}
+                                </span>
+                            </div>
+
+                            <div className="card-body">
+                                <div className="detail-item">
+                                    <label>UEI</label>
+                                    <span>{p.uei || '-'}</span>
+                                </div>
+                                <div className="detail-item">
+                                    <label>CAGE</label>
+                                    <span>{p.cageCode || '-'}</span>
+                                </div>
+                                <div className="detail-item full">
+                                    <label>Location</label>
+                                    <span>
+                                        {[p.primaryAddress?.city, p.primaryAddress?.state].filter(Boolean).join(', ') || 'N/A'}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     ))}
-                    {profiles.length === 0 && <div className="empty-state"><p>No profiles found.</p></div>}
+                    {profiles.length === 0 && (
+                        <div className="empty-state">
+                            <p>No company profiles found. Create one to get started.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -229,7 +259,7 @@ export default function CompanyProfile() {
             {/* HEADER */}
             <div className="profile-header">
                 <div>
-                    <button onClick={handleBackToList} className="back-link">← Directory</button>
+                    <button onClick={handleBackToList} className="back-link btn-back-directory">← Directory</button>
                     {/* Header shows COMMITTED name, not typing name */}
                     <h1>{savedProfile?.legalName || formData.legalName || 'New Company'}</h1>
                     <p>Edit Mode - Unsaved changes will be lost</p>
