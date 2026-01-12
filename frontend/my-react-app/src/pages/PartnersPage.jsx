@@ -286,105 +286,37 @@ export default function PartnersPage() {
                                                                                 </tr>
                                                                             );
                                                                         })}
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        ) : (
-                                                            /* EXISTING GRID VIEW */
-                                                            <div className="partners-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-                                                                {filteredPartners.map(partner => (
-                            <div key={partner._id} style={{
-                                background: 'white', border: '1px solid #dfe1e6', borderRadius: '8px', padding: '16px',
-                                display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                            }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <div>
-                                        <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#172b4d' }}>{partner.name}</h3>
-                                        <span style={{
-                                            fontSize: '0.8rem', padding: '2px 6px', borderRadius: '4px',
-                                            background: partner.type === 'Prime' ? '#e3f2fd' : '#f4f5f7',
-                                            color: partner.type === 'Prime' ? '#0052cc' : '#42526e',
-                                            fontWeight: '500', marginTop: '4px', display: 'inline-block'
-                                        }}>
-                                            {partner.type}
-                                        </span>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '5px' }}>
-                                        <button onClick={() => openEdit(partner)} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.1rem' }}>✏️</button>
-                                        <button onClick={() => handleDelete(partner._id)} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.1rem' }}>🗑</button>
-                                    </div>
-                                </div>
-
-                                {partner.website && <a href={partner.website} target="_blank" rel="noreferrer" style={{ fontSize: '0.9rem', color: '#0052cc' }}>{partner.website}</a>}
-
-                                <div style={{ fontSize: '0.9rem', color: '#42526e' }}>
-                                    <strong>Contact:</strong> {partner.contactName} {partner.email && `(${partner.email})`}
-                                </div>
-
-                                {partner.capabilities && (
-                                    <div style={{ background: '#f4f5f7', padding: '8px', borderRadius: '4px', fontSize: '0.85rem', color: '#172b4d', maxHeight: '60px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {partner.capabilities}
-                                    </div>
-                                )}
-
-                                {(partner.skills?.length > 0 || partner.agencies?.length > 0 || partner.naicsCodes?.length > 0) && (
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
-                                        {partner.agencies?.map(a => <span key={a} style={{ fontSize: '0.7em', padding: '2px 5px', background: '#E3FCEF', color: '#006644', borderRadius: '3px' }}>{a}</span>)}
-                                        {partner.skills?.slice(0, 5).map(s => <span key={s} style={{ fontSize: '0.7em', padding: '2px 5px', background: '#DEEBFF', color: '#0747A6', borderRadius: '3px' }}>{s}</span>)}
-                                        {partner.naicsCodes?.slice(0, 3).map(n => <span key={n} style={{ fontSize: '0.7em', padding: '2px 5px', background: '#eae6ff', color: '#403294', borderRadius: '3px' }}>{n}</span>)}
-                                    </div>
-                                )}
-
-                                <div style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid #eee' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                                        <span style={{ color: '#6b778c' }}>Rating: {partner.performanceRating || 50}/100</span>
-                                        <span style={{
-                                            color: partner.status === 'Active' ? '#006644' : (partner.status === 'Vetted' ? '#0052cc' : '#FF991F'),
-                                            fontWeight: 'bold'
-                                        }}>
-                                            {partner.status}
-                                        </span>
-                                    </div>
-
-                                    <div style={{ marginTop: '10px' }}>
-                                        <label style={{ fontSize: '0.8rem', display: 'block', marginBottom: '4px', color: '#6b778c' }}>Capability Statements:</label>
-                                        {partner.files && partner.files.length > 0 ? (
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                {partner.files.map((f, i) => (
-                                                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px', background: '#f4f5f7', borderRadius: '4px' }}>
-                                                        <a href={`https://crm-backend-w02x.onrender.com${f.url}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', color: '#0052cc' }}>📄 {f.name || `Doc ${i + 1}`}</a>
-                                                        <button
-                                                            onClick={async () => {
-                                                                try {
-                                                                    const token = localStorage.getItem("token");
-                                                                    const updatedFiles = partner.files.filter((_, idx) => idx !== i);
-                                                                    await axios.put(`https://crm-backend-w02x.onrender.com/api/partners/${partner._id}`,
-                                                                        { files: updatedFiles },
-                                                                        { headers: { Authorization: `Bearer ${token}` } }
-                                                                    );
-                                                                    fetchPartners();
-                                                                    showToast("File removed", "success");
-                                                                } catch (err) {
-                                                                    console.error(err);
-                                                                    showToast("Failed to remove file", "error");
-                                                                }
-                                                            }}
-                                                            style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '0.9rem' }}
-                                                        >
-                                                            🗑
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : <span style={{ fontSize: '0.8rem', color: '#dfe1e6' }}>No files</span>}
-
-                                        <div style={{ marginTop: '4px' }}>
-                                            <FileUpload id={`file-${partner._id}`} onChange={(e) => handleFileUpload(e, partner._id)} label="⬆ Upload New" />
+                                                        onClick={async () => {
+                                                            try {
+                                                                const token = localStorage.getItem("token");
+                                                                const updatedFiles = partner.files.filter((_, idx) => idx !== i);
+                                                                await axios.put(`https://crm-backend-w02x.onrender.com/api/partners/${partner._id}`,
+                                                                    { files: updatedFiles },
+                                                                    { headers: { Authorization: `Bearer ${token}` } }
+                                                                );
+                                                                fetchPartners();
+                                                                showToast("File removed", "success");
+                                                            } catch (err) {
+                                                                console.error(err);
+                                                                showToast("Failed to remove file", "error");
+                                                            }
+                                                        }}
+                                                        style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '0.9rem' }}
+                                                    >
+                                                        🗑
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
-                            <h3>No partners found.</h3>
-                            <p>Start by adding a teaming partner or sub.</p>
+                                    ) : <span style={{ fontSize: '0.8rem', color: '#dfe1e6' }}>No files</span>}
+
+                                    <div style={{ marginTop: '4px' }}>
+                                        <FileUpload id={`file-${partner._id}`} onChange={(e) => handleFileUpload(e, partner._id)} label="⬆ Upload New" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    )}
+                    ))}
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -427,5 +359,5 @@ export default function PartnersPage() {
             />
 
         </div >
-                                                        );
+                );
 }
