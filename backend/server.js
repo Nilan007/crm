@@ -91,8 +91,23 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 5000;
 
+
 connectDB(); // Start DB connection async
 
 server.listen(PORT, () => {
   console.log(`✅ Server (Socket.io) running on http://localhost:${PORT}`);
+});
+
+// PREVENT CRASHES: Global Error Handlers
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION! 💥 Shutting down gracefully...');
+  console.error(err.name, err.message);
+  console.error(err.stack);
+  // process.exit(1); // Don't exit immediately on Render, try to keep alive or let it restart
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION! 💥');
+  console.error(err.name, err.message);
+  // server.close(() => process.exit(1)); 
 });
