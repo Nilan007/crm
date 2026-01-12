@@ -9,9 +9,24 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const crypto = require('crypto');
 
 // Configure GridFS Storage
-// Configure GridFS Storage
+// Configure GridFS Storage with Promise against caching/race conditions
+const promise = new Promise((resolve, reject) => {
+    // If already connected, resolve immediately used by multer-gridfs-storage
+    if (mongoose.connection.readyState === 1) {
+        resolve(mongoose.connection);
+    } else {
+        // Wait for connection
+        mongoose.connection.once('open', () => {
+            resolve(mongoose.connection);
+        });
+        mongoose.connection.once('error', (err) => {
+            reject(err);
+        });
+    }
+});
+
 const storage = new GridFsStorage({
-    db: mongoose.connection,
+    db: promise,
     file: (req, file) => {
         return new Promise((resolve, reject) => {
             crypto.randomBytes(16, (err, buf) => {

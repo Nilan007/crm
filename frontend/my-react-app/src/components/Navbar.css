@@ -155,46 +155,86 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
-    .navbar-center {
-        gap: 5px;
+/* Responsive Adjustments */
+
+/* 14-inch screens (Standard Laptop) */
+@media screen and (max-width: 1440px) {
+    .navbar {
+        padding: 0 12px;
+        gap: 8px;
     }
 
-    .nav-item {
-        padding: 5px 8px;
-        font-size: 0.85rem;
+    .navbar-center {
+        gap: 2px;
+        /* Tighter links */
+    }
+
+    .search-container {
+        width: 200px;
     }
 }
 
-@media (max-width: 900px) {
+/* 13-inch screens (MacBooks / Smaller Laptops) */
+@media screen and (max-width: 1280px) {
+    .nav-item {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
+
+    .navbar-left {
+        margin-right: 5px;
+    }
+
+    .navbar-logo {
+        height: 24px;
+        /* Smaller logo */
+    }
+
+    .navbar-left span {
+        font-size: 1rem !important;
+        /* Smaller brand text */
+    }
+}
+
+/* 12-inch screens / Tablet Landscape */
+@media screen and (max-width: 1024px) {
     .navbar {
-        padding: 10px 15px;
+        flex-wrap: wrap;
+        padding: 8px 10px;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .navbar-left {
+        order: 1;
+        margin-right: auto;
+    }
+
+    .navbar-right {
+        order: 2;
+        margin-left: auto;
     }
 
     .navbar-center {
         order: 3;
-        /* Move links to bottom on small screens if needed, or keep wraps */
         width: 100%;
-        margin-top: 10px;
-        justify-content: center;
+        margin-top: 5px;
+        justify-content: flex-start;
         overflow-x: auto;
-        /* Enable scroll if still too wide */
+        /* Allow horizontal scroll */
         flex-wrap: nowrap;
-        /* Scroll horizontally instead of stack madness */
-        padding-bottom: 5px;
+        padding-bottom: 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 4px;
     }
 
-    /* Hide scrollbar */
+    /* Hide scrollbar for cleaner look */
     .navbar-center::-webkit-scrollbar {
         height: 0px;
     }
 
     .search-container {
-        margin-left: 0;
-        width: 100%;
-        margin-top: 10px;
-        order: 4;
         display: none;
-        /* Hide search on very small screens or move it */
+        /* Hide search on small screens to save space */
     }
 }

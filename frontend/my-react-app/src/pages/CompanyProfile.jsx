@@ -142,6 +142,20 @@ export default function CompanyProfile() {
         }
     };
 
+    const handleDeleteProfile = async () => {
+        if (!window.confirm("Are you sure you want to permanently delete this company profile? This action cannot be undone.")) return;
+        if (!selectedProfile._id) return;
+
+        try {
+            await api.delete(`/api/company-profile/${selectedProfile._id}`);
+            addToast("Company profile deleted.", 'success');
+            handleBackToList();
+        } catch (err) {
+            console.error('Error deleting profile:', err);
+            addToast("Failed to delete profile.", 'error');
+        }
+    };
+
     const handleFileUpload = async (e, category) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -263,6 +277,23 @@ export default function CompanyProfile() {
                     <p>Federal & State Contract Readiness</p>
                 </div>
                 <div className="header-actions">
+                    {profile?._id && (
+                        <button
+                            onClick={handleDeleteProfile}
+                            style={{
+                                marginRight: '10px',
+                                backgroundColor: '#dc3545',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontWeight: '500'
+                            }}
+                        >
+                            Delete Company
+                        </button>
+                    )}
                     <button onClick={handleSave} disabled={saving} className="btn-save-profile">
                         {saving ? 'Saving...' : 'Save All Changes'}
                     </button>
