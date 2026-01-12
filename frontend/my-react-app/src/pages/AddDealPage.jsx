@@ -3,7 +3,7 @@ import axios from "axios";
 import { useToast } from "../context/ToastContext";
 import { useNavigate, useParams } from "react-router-dom";
 import PriorityStars from "../components/PriorityStars";
-import "./AddDealModal.css"; // Reuse existing styles
+import "../components/AddDealModal.css"; // Reuse existing styles
 
 export default function AddDealPage() {
     const { addToast } = useToast();
