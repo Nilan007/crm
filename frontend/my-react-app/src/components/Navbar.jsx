@@ -69,7 +69,7 @@ export default function Navbar() {
   return (
     <>
       <header className="navbar">
-        <div className="navbar-left">
+        <div className="navbar-left" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <img src="/techxl-logo.png" alt="Techxl Logo" className="navbar-logo" />
           <span style={{ fontSize: '1.1rem', fontWeight: '700', color: 'white', letterSpacing: '0.5px' }}>TIS</span>
         </div>
