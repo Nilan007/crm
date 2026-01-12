@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoose = require('mongoose');
+
 
 const AttachmentSchema = new mongoose.Schema({
     name: String,
