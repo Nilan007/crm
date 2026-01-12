@@ -58,15 +58,21 @@ router.post('/', auth, async (req, res) => {
 
     try {
         console.log("Creating Profile - User:", req.user.id);
-        console.log("Creating Profile - Body:", JSON.stringify(req.body, null, 2));
+        // console.log("Body:", JSON.stringify(req.body, null, 2)); // Reduced log spam
 
-        // Sanitize body: Remove empty strings to prevent Mongoose Enum validation errors
-        const sanitizedBody = { ...req.body };
-        Object.keys(sanitizedBody).forEach(key => {
-            if (sanitizedBody[key] === "") {
-                sanitizedBody[key] = undefined;
-            }
-        });
+        // Recursive Sanitizer: Removes empty strings "" to prevent Enum/Date validation errors
+        const sanitize = (obj) => {
+            Object.keys(obj).forEach(key => {
+                if (obj[key] === "" || obj[key] === null) {
+                    obj[key] = undefined;
+                } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+                    sanitize(obj[key]);
+                }
+            });
+            return obj;
+        };
+
+        const sanitizedBody = sanitize({ ...req.body });
 
         const profile = await CompanyProfile.create({
             ...sanitizedBody,
@@ -75,6 +81,9 @@ router.post('/', auth, async (req, res) => {
         res.status(201).json(profile);
     } catch (err) {
         console.error('Error creating profile:', err);
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ message: 'Validation Error', error: err.message });
+        }
         res.status(500).json({ message: 'Failed to create profile', error: err.toString() });
     }
 });

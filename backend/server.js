@@ -17,6 +17,8 @@ connectDB();
 const { startScheduler } = require("./services/scheduler");
 startScheduler();
 
+const path = require("path"); // Ensure path is required
+
 /* ================= MIDDLEWARE ================= */
 app.use(cors({
   origin: true,
@@ -26,7 +28,7 @@ app.use(cors({
 console.log("✅ CORS configured for: http://localhost:5173, http://localhost:5174");
 
 app.use(express.json()); // parse JSON bodies
-app.use("/uploads", express.static("uploads")); // Serve uploaded files
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve uploaded files using absolute path
 
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
