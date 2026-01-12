@@ -60,8 +60,20 @@ router.post('/', auth, async (req, res) => {
         console.log("Creating Profile - User:", req.user.id);
         // console.log("Body:", JSON.stringify(req.body, null, 2)); // Reduced log spam
 
-        // Recursive Sanitizer: Removes empty strings "" to prevent Enum/Date validation errors
+        // Recursive Sanitizer
         const sanitize = (obj) => {
+            if (typeof obj === 'string') {
+                // Try to parse stringified JSON (common issue with FormData/Axios serialization mixes)
+                try {
+                    if ((obj.startsWith('{') && obj.endsWith('}')) || (obj.startsWith('[') && obj.endsWith(']'))) {
+                        const parsed = JSON.parse(obj);
+                        return sanitize(parsed);
+                    }
+                } catch (e) {
+                    // Not valid JSON, keep as string
+                }
+            }
+
             if (Array.isArray(obj)) {
                 return obj.map(item => sanitize(item)).filter(i => i !== undefined && i !== null);
             }
