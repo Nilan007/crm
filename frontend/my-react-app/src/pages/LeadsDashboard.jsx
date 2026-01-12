@@ -129,7 +129,7 @@ export default function LeadsDashboard() {
                     <h2 style={{ margin: 0 }}>Leads Pipeline</h2>
                     <button
                         className="btn btn-primary"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => window.location.href = '/pipeline/new'}
                         style={{ padding: '8px 16px', fontSize: '0.9rem' }}
                     >
                         + Add New Deal

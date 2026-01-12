@@ -93,7 +93,11 @@ const StateCIOPage = () => {
                 Select a state to view and manage CIO contact details.
             </p>
 
-            <USAMap onStateClick={handleStateClick} />
+            <div style={{ overflowX: 'auto', paddingBottom: '20px' }}>
+                <div style={{ minWidth: '1000px', display: 'flex', justifyContent: 'center' }}>
+                    <USAMap onStateClick={handleStateClick} />
+                </div>
+            </div>
 
             {/* MODAL */}
             {modalOpen && (

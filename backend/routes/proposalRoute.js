@@ -3,24 +3,7 @@ const router = express.Router();
 const Proposal = require('../models/Proposal');
 const Lead = require('../models/Lead');
 const auth = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Configure Multer
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadDir = path.join(__dirname, '../uploads/proposals');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({ storage: storage });
+const upload = require('../config/gridfs');
 
 /* ================= GET ANALYTICS (KPIs) ================= */
 router.get('/analytics', auth, async (req, res) => {
@@ -189,7 +172,7 @@ router.post('/:id/upload', auth, upload.single('file'), async (req, res) => {
         const document = {
             name: req.file.originalname,
             type: req.body.type || 'Other',
-            url: `/uploads/proposals/${req.file.filename}`,
+            url: `/api/files/${req.file.filename}`,
             uploadedBy: req.user.id
         };
 

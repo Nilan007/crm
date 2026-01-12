@@ -2,26 +2,7 @@ const express = require('express');
 const router = express.Router();
 const StateOrg = require('../models/StateOrg');
 const auth = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Configure Multer
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadDir = path.join(__dirname, '../uploads/orgchart');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        // Sanitize filename
-        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        cb(null, Date.now() + '-' + safeName);
-    }
-});
-const upload = multer({ storage: storage });
+const upload = require('../config/gridfs');
 
 /* ================= GET ALL ENTRIES ================= */
 router.get('/', auth, async (req, res) => {
@@ -48,7 +29,7 @@ router.post('/', auth, upload.array('files'), async (req, res) => {
 
         const filesData = req.files ? req.files.map(file => ({
             name: file.originalname,
-            url: `/uploads/orgchart/${file.filename}`,
+            url: `/api/files/${file.filename}`,
             fileType: file.mimetype,
             size: file.size
         })) : [];
@@ -82,7 +63,7 @@ router.post('/:id/files', auth, upload.array('files'), async (req, res) => {
 
         const newFiles = req.files.map(file => ({
             name: file.originalname,
-            url: `/uploads/orgchart/${file.filename}`,
+            url: `/api/files/${file.filename}`,
             fileType: file.mimetype,
             size: file.size
         }));

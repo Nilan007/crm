@@ -5,36 +5,17 @@ const Lead = require("../models/Lead");
 const auth = require("../middleware/authMiddleware");
 
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-
-// Configure Multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, "../uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
+const upload = require('../config/gridfs');
 
 /* ================= UPLOAD ATTACHMENT ================= */
 router.post("/upload", auth, upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
-  // Return the relative path or full URL
-  // Assuming we serve 'uploads' statically in server.js, let's return a relative path we can use.
+  // Return GridFS file URL
   res.json({
     name: req.file.originalname,
-    url: `/uploads/${req.file.filename}`
+    url: `/api/files/${req.file.filename}`
   });
 });
 

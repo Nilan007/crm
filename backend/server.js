@@ -29,20 +29,8 @@ console.log("✅ CORS configured for: http://localhost:5173, http://localhost:51
 
 app.use(express.json()); // parse JSON bodies
 
-// Debug Middleware for Static Files
-app.use("/uploads", (req, res, next) => {
-  const filePath = path.join(__dirname, "uploads", req.path);
-  console.log(`📂 Static Request: ${req.path} -> Looking in: ${filePath}`);
-  const fs = require("fs");
-  if (fs.existsSync(filePath)) {
-    console.log("   ✅ File exists!");
-  } else {
-    console.log("   ❌ File NOT found!");
-  }
-  next();
-});
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve uploaded files using absolute path
+// GridFS File Serving (replaces static uploads directory)
+// Files are now stored in MongoDB and served via /api/files/:filename
 
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
@@ -60,6 +48,7 @@ app.use("/api/state-org", require("./routes/stateOrgRoute"));
 app.use("/api/credentials", require("./routes/credentialRoute"));
 app.use("/api/state-cio", require("./routes/stateCIORoute"));
 app.use("/api/contacts", require("./routes/contactRoute"));
+app.use("/api/files", require("./routes/fileRoute")); // GridFS file retrieval
 
 
 /* ================= HEALTH CHECK ================= */

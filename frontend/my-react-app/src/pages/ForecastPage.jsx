@@ -106,6 +106,13 @@ export default function ForecastPage() {
             <div className="dashboard-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <h2 style={{ margin: 0 }}>Forecast Pipeline</h2>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => window.location.href = '/pipeline/new'}
+                        style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+                    >
+                        + Add New Deal
+                    </button>
                     <div className="view-toggle">
                         {['All', 'State', 'Federal', 'Others'].map((filter, idx, arr) => (
                             <button
@@ -187,13 +194,16 @@ export default function ForecastPage() {
             {view === "card" && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px', padding: '20px 0' }}>
                     {filteredLeads.map(lead => (
-                        <div key={lead._id} style={{
-                            background: 'white',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            border: '1px solid #e0e0e0'
-                        }}>
+                        <div key={lead._id}
+                            onClick={() => window.location.href = `/pipeline/edit/${lead._id}`}
+                            style={{
+                                background: 'white',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                border: '1px solid #e0e0e0',
+                                cursor: 'pointer'
+                            }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
                                 <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#172b4d' }}>{lead.name}</h3>
                                 <span style={{

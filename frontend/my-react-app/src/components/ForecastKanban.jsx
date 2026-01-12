@@ -53,7 +53,7 @@ function ForecastCard({ lead, isOverlay, ...props }) {
     return (
         <div
             className={`kanban-card ${isOverlay ? 'overlay' : ''}`}
-            onDoubleClick={() => !isOverlay && navigate(`/lead/${lead._id}`)}
+            onDoubleClick={() => !isOverlay && navigate(`/pipeline/edit/${lead._id}`)}
             {...props}
             style={{
                 borderLeft: `4px solid ${lead.forecastStage === 'High Priority' ? '#ef4444' : lead.forecastStage === 'Low Priority' ? '#eab308' : '#3b82f6'}`,

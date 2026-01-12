@@ -15,6 +15,7 @@ import OrgChartPage from "./pages/OrgChartPage";
 import PortalsPage from "./pages/PortalsPage";
 import PortalCredentials from "./pages/PortalCredentials";
 import StateCIOPage from "./pages/StateCIOPage";
+import AddDealPage from "./pages/AddDealPage";
 import MainDashboard from "./pages/MainDashboard";
 import Layout from "./components/Layout";
 import { ToastProvider } from "./context/ToastContext";
@@ -73,6 +74,28 @@ export default function App() {
                 <ProtectedRoute>
                   <Layout>
                     <LeadsDashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pipeline/new"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AddDealPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pipeline/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AddDealPage />
                   </Layout>
                 </ProtectedRoute>
               }

@@ -2,30 +2,10 @@ const express = require('express');
 const router = express.Router();
 const CompanyProfile = require('../models/CompanyProfile');
 const auth = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
 const mongoose = require('mongoose');
-const fs = require('fs');
+const upload = require('../config/gridfs');
 
-// Configure Multer for file uploads (Disk Storage - same as leadRoute)
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadDir = path.join(__dirname, "../uploads");
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        // Use a unique filename
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-});
-
-const upload = multer({ storage });
-
-// NOTE: File retrieval is handled by express.static('/uploads') in server.js
-// We don't need a specific route for serving files anymore if we return the direct URL.
+// NOTE: Files are now stored in MongoDB GridFS and served via /api/files/:filename
 
 
 /* ================= GET ALL PROFILES ================= */
@@ -157,10 +137,10 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/upload', auth, upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-    // Return the URL for static serving
+    // Return GridFS file URL
     res.json({
         name: req.file.originalname,
-        url: `/uploads/${req.file.filename}`,
+        url: `/api/files/${req.file.filename}`,
         uploadedAt: new Date()
     });
 });
@@ -172,7 +152,7 @@ router.post('/:id/certifications', auth, upload.single('file'), async (req, res)
     try {
         const attachment = {
             name: req.file.originalname,
-            url: `/uploads/${req.file.filename}`,
+            url: `/api/files/${req.file.filename}`,
             uploadedAt: new Date()
         };
 

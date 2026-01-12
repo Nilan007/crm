@@ -37,7 +37,7 @@ export default function ListView({ leads, onDelete }) {
                 </thead>
                 <tbody>
                     {leads.map((lead) => (
-                        <tr key={lead._id} onDoubleClick={() => navigate(`/lead/${lead._id}`)}>
+                        <tr key={lead._id} onDoubleClick={() => navigate(`/pipeline/edit/${lead._id}`)}>
                             <td>{lead.name}</td>
                             <td>
                                 <span className={`stage-badge ${getStageClass(lead.stage)}`}>
