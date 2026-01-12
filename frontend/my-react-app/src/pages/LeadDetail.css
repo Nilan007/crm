@@ -11,10 +11,30 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    gap: 20px;
+    /* Ensure space between title and buttons */
+}
+
+/* Wrapper for Back Button + Title */
+.header-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    /* CRITICAL: Allows truncation inside flex child */
+    max-width: 70%;
+    /* Prevent it from pushing buttons off too far if needed */
+}
+
+.header-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
 }
 
 .header-title {
-    margin: 8px 0 0 0;
+    margin: 0;
     font-size: 2rem;
     color: #172b4d;
     font-weight: 700;
@@ -23,7 +43,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    /* max-width: 100%;  <-- Removed, let flex parent handle it */
     cursor: default;
     transition: all 0.2s ease;
 }
@@ -42,9 +62,13 @@
     word-break: break-word;
 }
 
+/* Ensure buttons never shrink */
 .header-actions {
     display: flex;
     gap: 12px;
+    flex-shrink: 0;
+    /* CRITICAL: Prevent buttons from squishing */
+    white-space: nowrap;
 }
 
 /* GRID LAYOUTS */
