@@ -28,25 +28,31 @@
     opacity: 0.9;
 }
 
+/* Main Primary Button (Matches "Add Partner") */
 .btn-save-profile {
-    background: white;
-    color: #667eea;
+    background: #0052cc;
+    color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: background 0.2s;
+    font-size: 0.95rem;
 }
 
 .btn-save-profile:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: #0747a6;
+    transform: translateY(0);
+    /* Remove jumpy effect */
+    box-shadow: none;
 }
 
 .btn-save-profile:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background: #dfe1e6;
+    color: #6b778c;
 }
 
 /* Vertical Sidebar Layout */
@@ -336,10 +342,13 @@
 
 .company-card {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    /* Match PartnersPage */
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Match PartnersPage */
+    border: 1px solid #dfe1e6;
+    /* Match PartnersPage */
     transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
@@ -350,9 +359,9 @@
 }
 
 .company-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    border-color: #cbd5e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: #b3bac5;
 }
 
 /* Card Header */
@@ -365,9 +374,11 @@
 
 .card-header h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+    /* Match PartnersPage */
     font-weight: 700;
-    color: #2d3748;
+    color: #172b4d;
+    /* Match PartnersPage */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -376,8 +387,9 @@
 
 .edit-icon {
     opacity: 0;
-    color: #a0aec0;
+    color: #5e6c84;
     transition: opacity 0.2s;
+    font-size: 1.1rem;
 }
 
 .company-card:hover .edit-icon {
@@ -392,27 +404,28 @@
 }
 
 .badge {
-    padding: 4px 10px;
-    border-radius: 20px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    /* Square off slightly for cleaner look */
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
 }
 
 .type-badge {
-    background: #edf2f7;
-    color: #4a5568;
+    background: #e3f2fd;
+    color: #0052cc;
 }
 
 .status-badge.active {
-    background: #c6f6d5;
-    color: #22543d;
+    background: #e3fcef;
+    color: #006644;
 }
 
 .status-badge.expired {
-    background: #fed7d7;
-    color: #822727;
+    background: #ffebe6;
+    color: #de350b;
 }
 
 /* Card Body Details */
@@ -421,9 +434,10 @@
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-top: auto;
-    background: #f7fafc;
+    background: #f4f5f7;
+    /* Slightly darker bg for key details */
     padding: 12px;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .detail-item {
@@ -436,15 +450,18 @@
 }
 
 .detail-item label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     text-transform: uppercase;
-    color: #718096;
+    color: #6b778c;
+    /* Match PartnersPage Label */
     margin-bottom: 2px;
 }
 
 .detail-item span {
     font-size: 0.9rem;
-    color: #2d3748;
+    color: #172b4d;
+    /* Match PartnersPage Text */
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -457,9 +474,9 @@
     text-align: center;
     padding: 60px;
     background: white;
-    border-radius: 12px;
-    border: 2px dashed #cbd5e0;
-    color: #718096;
+    border-radius: 8px;
+    border: 1px dashed #dfe1e6;
+    color: #6b778c;
 }
 
 /* --- RESPONSIVE TWEAKS --- */
