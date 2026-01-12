@@ -94,7 +94,7 @@ const StateCIOPage = () => {
             </p>
 
             <div style={{ overflowX: 'auto', paddingBottom: '20px' }}>
-                <div style={{ minWidth: '1000px', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ minWidth: '1100px', display: 'flex', justifyContent: 'center' }}>
                     <USAMap onStateClick={handleStateClick} />
                 </div>
             </div>

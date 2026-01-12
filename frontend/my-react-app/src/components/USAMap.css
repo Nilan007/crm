@@ -6,9 +6,11 @@
     width: 100%;
     max-width: 1800px;
     margin: 0 auto;
-    padding: 40px;
-    height: 85vh;
-    /* Occupy vertical space */
+    padding: 20px;
+    aspect-ratio: 1.5;
+    /* Keeps the map proportional (12 cols / 8 rows) */
+    min-height: 600px;
+    /* Prevents vertical squashing on short screens */
 }
 
 .state-box {
