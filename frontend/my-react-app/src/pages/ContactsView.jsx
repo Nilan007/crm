@@ -592,8 +592,8 @@ export default function ContactsView() {
                                                 {contact.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div className="contact-main-info">
-                                                <h3>{contact.name} {contact.surname}</h3>
-                                                <span className="role-badge">
+                                                <h3 title={contact.name + ' ' + contact.surname}>{contact.name} {contact.surname}</h3>
+                                                <span className="role-badge" title={contact.role + (contact.agency ? ` • ${contact.agency}` : "")}>
                                                     {contact.role || "No Role"}
                                                     {contact.agency ? ` • ${contact.agency}` : ""}
                                                 </span>
@@ -612,38 +612,27 @@ export default function ContactsView() {
                                         </div>
                                         <div className="contact-card-body">
                                             <div className="info-row">
-                                                <span className="label">Email:</span>
-                                                <span className="value">{contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : "-"}</span>
+                                                <span className="label">Email</span>
+                                                <span className="value" title={contact.email}>{contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : "-"}</span>
                                             </div>
                                             <div className="info-row">
-                                                <span className="label">Phone:</span>
-                                                <span className="value">{contact.phone || "-"}</span>
+                                                <span className="label">Phone</span>
+                                                <span className="value" title={contact.phone}>{contact.phone || "-"}</span>
                                             </div>
                                             <div className="info-row">
-                                                <span className="label">Address:</span>
-                                                <span className="value">
-                                                    {contact.state ? contact.state : ""}
-                                                    {contact.county ? `, ${contact.county}` : ""}
-                                                    {!contact.state && !contact.county ? "-" : ""}
+                                                <span className="label">Loc</span>
+                                                <span className="value" title={`${contact.state || ''} ${contact.county || ''}`}>
+                                                    {contact.state || "-"}{contact.county ? `, ${contact.county}` : ""}
                                                 </span>
                                             </div>
                                             <div className="info-row">
-                                                <span className="label">Dept:</span>
-                                                <span className="value">{contact.department || "-"}</span>
-                                            </div>
-                                            <div className="info-row">
-                                                <span className="label">Links:</span>
-                                                <span className="value-links">
-                                                    {contact.stateUrl && <a href={contact.stateUrl.startsWith('http') ? contact.stateUrl : `https://${contact.stateUrl}`} target="_blank" rel="noopener noreferrer">State</a>}
-                                                    {contact.stateUrl && contact.linkedinUrl && " | "}
-                                                    {contact.linkedinUrl && <a href={contact.linkedinUrl.startsWith('http') ? contact.linkedinUrl : `https://${contact.linkedinUrl}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>}
-                                                    {!contact.stateUrl && !contact.linkedinUrl && "-"}
-                                                </span>
+                                                <span className="label">Dept</span>
+                                                <span className="value" title={contact.department}>{contact.department || "-"}</span>
                                             </div>
                                             <div className="info-row source-row">
-                                                <span className="label">Source Deal:</span>
-                                                <Link to={`/lead/${contact.sourceLeadId}`} className="source-link">
-                                                    {contact.sourceLeadName} ↗
+                                                <span className="label">Deal</span>
+                                                <Link to={`/lead/${contact.sourceLeadId}`} className="source-link value" title={contact.sourceLeadName} style={{ textAlign: 'right', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {contact.sourceLeadName}
                                                 </Link>
                                             </div>
                                         </div>
