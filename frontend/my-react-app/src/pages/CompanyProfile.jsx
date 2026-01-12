@@ -113,6 +113,8 @@ export default function CompanyProfile() {
         } catch (err) {
             console.error(err);
             const msg = err.response?.data?.message || "Save failed";
+            const detail = err.response?.data?.error ? ` (${err.response.data.error})` : "";
+            alert(`Error: ${msg}${detail}`); // Use alert for persistence, or toast
             addToast(`Error: ${msg}`, "error");
         } finally {
             setSaving(false);
