@@ -57,8 +57,19 @@ router.post('/', auth, async (req, res) => {
     }
 
     try {
+        console.log("Creating Profile - User:", req.user.id);
+        console.log("Creating Profile - Body:", JSON.stringify(req.body, null, 2));
+
+        // Sanitize body: Remove empty strings to prevent Mongoose Enum validation errors
+        const sanitizedBody = { ...req.body };
+        Object.keys(sanitizedBody).forEach(key => {
+            if (sanitizedBody[key] === "") {
+                sanitizedBody[key] = undefined;
+            }
+        });
+
         const profile = await CompanyProfile.create({
-            ...req.body,
+            ...sanitizedBody,
             updatedBy: req.user.id
         });
         res.status(201).json(profile);
@@ -82,6 +93,13 @@ router.put('/:id', auth, async (req, res) => {
         delete updates.createdAt;
         delete updates.updatedAt; // Managed by timestamps: true
         delete updates.createdBy;
+
+        // Sanitize string fields
+        Object.keys(updates).forEach(key => {
+            if (updates[key] === "") {
+                updates[key] = undefined;
+            }
+        });
 
         const profile = await CompanyProfile.findByIdAndUpdate(
             req.params.id,
