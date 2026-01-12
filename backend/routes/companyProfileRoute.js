@@ -62,13 +62,18 @@ router.post('/', auth, async (req, res) => {
 
         // Recursive Sanitizer: Removes empty strings "" to prevent Enum/Date validation errors
         const sanitize = (obj) => {
-            Object.keys(obj).forEach(key => {
-                if (obj[key] === "" || obj[key] === null) {
-                    obj[key] = undefined;
-                } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-                    sanitize(obj[key]);
-                }
-            });
+            if (Array.isArray(obj)) {
+                return obj.map(item => sanitize(item));
+            }
+            if (typeof obj === 'object' && obj !== null) {
+                Object.keys(obj).forEach(key => {
+                    if (obj[key] === "" || obj[key] === null) {
+                        obj[key] = undefined;
+                    } else if (typeof obj[key] === 'object') {
+                        obj[key] = sanitize(obj[key]);
+                    }
+                });
+            }
             return obj;
         };
 
