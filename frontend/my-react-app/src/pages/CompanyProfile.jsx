@@ -297,8 +297,11 @@ export default function CompanyProfile() {
                     <button onClick={handleSave} disabled={saving} className="btn-save-profile">
                         {saving ? 'Saving...' : 'Save All Changes'}
                     </button>
+                    <div style={{ marginTop: '5px', fontSize: '0.8rem', color: '#e53e3e', fontWeight: '500' }}>
+                        * Changes are not saved automatically. Click Save.
+                    </div>
                     {profile?.updatedAt && (
-                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px', textAlign: 'right' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px', textAlign: 'right' }}>
                             Last Saved: {new Date(profile.updatedAt).toLocaleString()}
                         </div>
                     )}
